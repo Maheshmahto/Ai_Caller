@@ -12,7 +12,6 @@ import Signup from "./components/Signup";
 import { NightModeProvider } from "./contexts/NightModeContext";
 import LoginPage from "./hooks/LoginPage";
 import PrivateRoute from "./hooks/PrivateRoute";
-import RazorpayCheckout from "./pages/RazorpayCheckout";
 function Content() {
   const { isAuthenticated } = useContext(AuthContext);
 

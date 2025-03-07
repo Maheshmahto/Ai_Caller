@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { useNightMode } from "../contexts/NightModeContext";
 import axios from "../helper/axios";
 import Loader from "../components/Loader";
-
+import { useNavigate } from "react-router-dom";
+import ProfileSettings from "./Profile";
 const Dashboard = () => {
   const [activeButton, setActiveButton] = useState(null);
   const [dropdownState, setDropdownState] = useState({
@@ -12,9 +13,10 @@ const Dashboard = () => {
   });
   const [dashboard, setDashboard] = useState([]);
   const { isNightMode, toggleNightMode } = useNightMode();
-  const [balance, setBalance] = useState(null);
   const token = localStorage.getItem("authToken");
   const [load, setLoad] = useState(true);
+  const navigate=useNavigate();
+  const [balance, setBalance] = useState(null);
 
   const getUserBalance = async () => {
     try {
@@ -124,6 +126,8 @@ const Dashboard = () => {
           <img src="/Rectangle.webp" alt="" className="w-10 h-10" />
         </div>
       </div>
+      <ProfileSettings></ProfileSettings>
+
 
       <div
         className={`${
@@ -302,7 +306,7 @@ const Dashboard = () => {
       >
         <div className="flex justify-between items-center border-b p-6">
           <h2 className="text-lg font-semibold">Recent Calls</h2>
-          <button className="text-blue-500 font-medium hover:underline">
+          <button  onClick={()=>navigate('/call-logs')} className="text-blue-500 font-medium hover:underline">
             View All
           </button>
         </div>

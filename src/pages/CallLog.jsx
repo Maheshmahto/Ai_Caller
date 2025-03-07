@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import Loader from "../components/Loader";
 const CallLog = () => {
   const [showForm, setShowForm] = useState(false);
-  const { isNightMode } = useNightMode();
+  const { isNightMode,toggleNightMode } = useNightMode();
   const [dashboard, setDashboard] = useState({});
   const [show, setShow] = useState(false);
   const [selectedExecution, setSelectedExecution] = useState(null); // Track the clicked execution
@@ -21,8 +21,8 @@ const CallLog = () => {
   const user_id = payloadDecoded.user_id;
 
   const handleShowDetails = (execution) => {
-    setSelectedExecution(execution); // Set the clicked execution
-    setShow(!show); // Toggle the visibility of CallDetails
+    setSelectedExecution(execution);
+    setShow(!show); 
   };
 
   const agentDashboard = async () => {
@@ -34,6 +34,7 @@ const CallLog = () => {
         },
       });
       setDashboard(response.data);
+      console.log(response.data);
       setLoad(false);
     } catch (e) {
       console.error(
@@ -160,9 +161,9 @@ const CallLog = () => {
         isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
       } p-9 min-h-screen`}
     >
-      <div className="flex justify-between">
+      {/* <div className="flex justify-between">
         <div className="font-bold text-3xl">
-          Dashboard Overview
+          CallLogs Overview
           <p className="text-xl font-semibold text-gray-400">
             Monitor your AI calling performance
           </p>
@@ -181,6 +182,46 @@ const CallLog = () => {
             />
           </div>
           <img src="/Rectangle.webp" alt="" className="w-10 h-10 mt-2 ml-8" />
+        </div>
+      </div> */}
+         <div className="flex flex-col md:flex-row justify-between">
+        <div className="font-bold text-2xl md:text-3xl">
+          Dashboard Overview
+          <p className="text-lg md:text-xl font-semibold text-gray-400">
+            Monitor your AI calling performance
+          </p>
+        </div>
+
+        <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-4">
+          <button
+            className="flex items-center bg-gray-100 rounded-md p-2 text-lg font-semibold text-gray-600"
+            onClick={toggleNightMode}
+          >
+            {isNightMode ? (
+              <>
+                Light mode <img src="/Light mode.png" alt="" className="ml-2" />
+              </>
+            ) : (
+              <>
+                Night mode
+                <img src="/Vector (4).webp" alt="" className="ml-2" />
+              </>
+            )}
+          </button>
+
+          <div
+            className={`${
+              isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
+            } border rounded-lg flex items-center w-full md:w-auto`}
+          >
+            <img src="/Vector (5).webp" alt="" className="w-5 h-5 ml-3" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="ml-4 p-2 mr-16 outline-none bg-transparent w-full md:w-48"
+            />
+          </div>
+          <img src="/Rectangle.webp" alt="" className="w-10 h-10" />
         </div>
       </div>
 
@@ -240,13 +281,7 @@ const CallLog = () => {
               >
                 Cancel
               </button>
-              {/* <button
-                type="submit"
-                className="bg-customPink text-white px-20 py-2 rounded-lg hover:bg-customDarkPink"
-                onClick={handleCall}
-              >
-                Call
-              </button> */}
+
               <button
                 className={`bg-customPink text-white px-20 py-2 rounded-lg ${
                   loading
@@ -332,14 +367,23 @@ const CallLog = () => {
                 <th className="p-4">Timestamp</th>
               </tr>
             </thead>
+
             <tbody>
               {dashboard.executions?.map((execution) => {
                 const cta = getCTA(execution);
+                const costItem = dashboard.extra_charge_breakdown?.find(
+                  (item) => item.execution_id === execution.id
+                );
+                const cost =
+                  costItem?.total_cost_with_extra?.toFixed(2) ||
+                  execution.total_cost.toFixed(2) ||
+                  "N/A";
+
                 return (
                   <tr key={execution.id} className="text-sm border-t">
                     <td
                       className="p-4 cursor-pointer hover:underline"
-                      onClick={() => handleShowDetails(execution)} // Pass the execution object
+                      onClick={() => handleShowDetails(execution)}
                     >
                       {execution.id.slice(0, 8)}
                     </td>
@@ -353,12 +397,7 @@ const CallLog = () => {
                         {execution.status}
                       </span>
                     </td>
-
-                        <td className="p-4">
-                {execution.extra_charge_breakdown?.length > 0
-                  ? `$ ${execution.extra_charge_breakdown[0].total_cost_with_extra.toFixed(2)}`
-                  : "N/A"}
-              </td>
+                    <td className="p-4">{cost}</td>
                     <td className="p-4">
                       {formatDuration(execution.conversation_duration)}
                     </td>

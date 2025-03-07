@@ -5,23 +5,35 @@ import { FaCcMastercard } from "react-icons/fa";
 import { SiAmericanexpress } from "react-icons/si";
 import { RiSecurePaymentLine } from "react-icons/ri";
 import axios from "../helper/axios";
-
+import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const RechargePage = () => {
   const { isNightMode } = useNightMode();
 
-  const [amount, setAmount] = useState(500);
+  const [amount, setAmount] = useState(null);
   const [receipt, setReceipt] = useState("");
   const [orderId, setOrderId] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null);
 
   const token = localStorage.getItem("authToken");
 
-  const payloadBase64 = token.split(".")[1]; // Get the payload part
-  const payloadDecoded = JSON.parse(atob(payloadBase64)); // Decode Base64
+  const payloadBase64 = token.split(".")[1]; 
+  const payloadDecoded = JSON.parse(atob(payloadBase64));
   const user_id = payloadDecoded.user_id;
-
+  const location = useLocation();
+ const navigate=useNavigate();
+  useEffect(() => {
+  
+    if (location.state?.price) {
+      setAmount(location.state.price);
+    } else {
+      const storedPrice = localStorage.getItem("rechargePrice");
+      if (storedPrice) {
+        setAmount(Number(storedPrice)); 
+      }
+    }
+  }, [location.state]);
   useEffect(() => {
     const loadRazorpayScript = () => {
       if (
@@ -123,7 +135,9 @@ const RechargePage = () => {
             Swal.fire({
               title: `Payment Successful! Payment ID: ${paymentResponse.razorpay_payment_id}`,
               icon: "success",
-            });
+            }).then(()=>{
+              navigate('/dashboard')
+            })
           }
           console.log(verifyResponse);
         } catch (error) {
@@ -150,7 +164,6 @@ const RechargePage = () => {
               : "bg-white text-gray-700"
           } shadow-2xl rounded-2xl p-6 w-96 text-center`}
         >
-          {/* <div className="w-[100%] h-8 bg-slate-800 border-separate"></div> */}
           <div className="mb-4">
             <h1 className="text-2xl font-semibold text-gray-700">
               <div className="border-b mx-auto flex justify-center">
@@ -172,23 +185,25 @@ const RechargePage = () => {
               type="number"
               placeholder="Your Amount"
               className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-300 focus:outline-none 
-              
-    ${
-      isNightMode
-        ? "bg-gray-800 text-white border-gray-600 placeholder-gray-400"
-        : "bg-white text-gray-700 border-gray-300"
-    }`}
-              onChange={(e) => setAmount(Number(e.target.value))}
+              ${
+                isNightMode
+                  ? "bg-gray-800 text-white border-gray-600 placeholder-gray-400"
+                  : "bg-white text-gray-700 border-gray-300"
+              }`}
+              required
+              value={amount || ""} // Use empty string as fallback
+              onChange={(e) => setAmount(Number(e.target.value))} // Allow changes
             />
             <input
               type="text"
               placeholder="Enter Receipt Name"
               className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-300 focus:outline-none 
-    ${
-      isNightMode
-        ? "bg-gray-800 text-white border-gray-600 placeholder-gray-400"
-        : "bg-white text-gray-700 border-gray-300"
-    }`}
+      ${
+        isNightMode
+          ? "bg-gray-800 text-white border-gray-600 placeholder-gray-400"
+          : "bg-white text-gray-700 border-gray-300"
+      }`}
+              required
               onChange={(e) => setReceipt(e.target.value)}
             />
           </div>

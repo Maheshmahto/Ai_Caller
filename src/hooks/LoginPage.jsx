@@ -82,7 +82,7 @@ const LoginPage = () => {
   return (
     <div className="flex h-screen p-16">
       <div className="w-[60%] flex justify-center items-center">
-        <img className="h-[80%]" src="/login.png" alt="Login" />
+        <img className="h-[80%]" src="/SignIn.png" alt="Login" />
       </div>
       <div className="shadow-lg flex-1 rounded-xl px-10">
         <div className="">

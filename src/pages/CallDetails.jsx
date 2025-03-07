@@ -2,7 +2,6 @@
 import { MdOutlineCancel } from "react-icons/md";
 
 const CallDetails = ({ handleShowDetails, execution }) => {
-  // Function to format duration in a more readable way
   const formatDuration = (seconds) => {
     if (!seconds) return "N/A";
     const minutes = Math.floor(seconds / 60);
@@ -104,6 +103,7 @@ const CallDetails = ({ handleShowDetails, execution }) => {
       <h3 className="text-lg font-semibold mb-2">Call Recording</h3>
       <audio controls className="w-full mb-4">
         <source
+          // eslint-disable-next-line react/prop-types
           src={execution?.telephony_data?.recording_url || "audio-file.mp3"}
           type="audio/mp3"
         />
