@@ -16,7 +16,7 @@ const Campaigns = () => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState("12:00");
   const [batchId, setBatchId] = useState("");
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("token");
   const [load, setLoad] = useState(true);
 
   const DeleteBatch = async (id) => {
@@ -71,8 +71,8 @@ const Campaigns = () => {
     scheduledDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
     const scheduled_at = scheduledDate.toISOString().slice(0, 19);
 
-    console.log("Scheduled Time:", scheduled_at);
-    console.log("Batch ID:", batchId);
+    // console.log("Scheduled Time:", scheduled_at);
+    // console.log("Batch ID:", batchId);
 
     setScheduledTime(scheduled_at);
     setShowCalendar(false);
@@ -98,7 +98,7 @@ const Campaigns = () => {
         icon: "success",
         title: "Call Scheduled Successfully",
       });
-      console.log(response.data);
+      // console.log(response.data);
     } catch (e) {
       const errorMessage = e.response?.data?.detail || e.message;
       Swal.fire({

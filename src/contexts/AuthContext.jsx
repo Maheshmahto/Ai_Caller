@@ -1,57 +1,58 @@
-import { createContext, useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import{ createContext, useReducer, useContext } from 'react';
+import Swal from 'sweetalert2';
 
-export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(() =>
-    !!localStorage.getItem("authToken")
-  );
 
-  const navigate = useNavigate();
-
-  const register = (email, password) => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const userExists = users.find((user) => user.email === email);
-
-    if (userExists) {
-      alert("User already exists");
-    } else {
-      const hashedPassword = password; // Replace with actual hashing in production
-      users.push({ email, password: hashedPassword });
-      localStorage.setItem("users", JSON.stringify(users));
-      alert("Registration successful");
-      navigate("/login");
-    }
-  };
-
-  const login = (email, password) => {
-    // You can remove the local user check if you're fully relying on the backend
-    const token = localStorage.getItem("authToken");
-    if (token && validateToken(token)) {
-      setIsAuthenticated(true);
-      navigate("/dashboard");
-    } else {
-      alert("Please log in again");
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem("authToken");
-    setIsAuthenticated(false);
-    navigate("/login");
-  };
-
-  const validateToken = (token) => {
-    // Add real token validation logic here (e.g., check expiration or make an API call)
-    return !!token; // For now, just check if token exists
-  };
-
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, register, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+const initialState = {
+    user: null,
+    token: null,
+    logout: () => {} 
 };
 
-export const useAuth = () => useContext(AuthContext);
+const LoginContext = createContext(initialState);
+
+const loginReducer = (state, action) => {
+    switch (action.type) {
+        case 'LOGIN':
+            return { ...state, user: action.payload.user, token: action.payload.token };
+        case 'LOGOUT':
+            return { ...state, user: null, token: null };
+        default:
+            return state;
+    }
+};
+
+const LoginProvider = ({ children}) => {
+    const [state, dispatch] = useReducer(loginReducer, { user: null, token: null });
+
+    const logout = () => {
+        Swal.fire({
+            title: 'Are you sure you want to logout!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, log out',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                dispatch({ type: 'LOGOUT' });
+                // Optionally, clear tokens from local storage
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                // Redirect the user
+                window.location.href = '/maitri_assistant/';
+            }
+        });
+    };
+
+    return (
+        <LoginContext.Provider value={{ ...state, dispatch, logout }}>
+            {children}
+        </LoginContext.Provider>
+    );
+};
+
+// Custom hook to use the LoginContext
+const useLogin = () => useContext(LoginContext);
+
+export { LoginProvider, useLogin };

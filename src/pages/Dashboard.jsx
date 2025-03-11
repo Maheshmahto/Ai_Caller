@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNightMode } from "../contexts/NightModeContext";
 import axios from "../helper/axios";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
 import ProfileSettings from "./Profile";
+import Swal from "sweetalert2";
+
 const Dashboard = () => {
   const [activeButton, setActiveButton] = useState(null);
   const [dropdownState, setDropdownState] = useState({
@@ -13,11 +15,11 @@ const Dashboard = () => {
   });
   const [dashboard, setDashboard] = useState([]);
   const { isNightMode, toggleNightMode } = useNightMode();
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("token");
+  // console.log(token)
   const [load, setLoad] = useState(true);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [balance, setBalance] = useState(null);
-
   const getUserBalance = async () => {
     try {
       const response = await axios.get("/api/user/user_balance/", {
@@ -28,16 +30,33 @@ const Dashboard = () => {
       });
 
       setBalance(response.data.balance);
+      console.log(response.data);
     } catch (e) {
       console.log(e);
     }
   };
-           
-  // const getBalance = async () => {
-  //   const response = await axios.get("/api/user/balance");
-  // };
+
+  const [profileData, setProfileData] = useState({});
+  const getMyProfile = async () => {
+    try {
+      const response = await axios.get("/api/get_my_profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      // console.log(response.data.data);
+      setProfileData(response.data.data);
+    } catch (e) {
+      Swal.fire({
+        title: `${e.data.message}`,
+        icon: "error",
+      });
+    }
+  };
+
   const agentDashboard = async () => {
-    console.log(token);
+    // console.log(token);
 
     try {
       const response = await axios.get("/api/api/agent/dashboard_data/", {
@@ -60,6 +79,7 @@ const Dashboard = () => {
     agentDashboard();
     // getBalance();
     getUserBalance();
+    getMyProfile();
   }, []);
 
   const options = ["Hours", "Minutes", "Seconds"];
@@ -80,6 +100,60 @@ const Dashboard = () => {
     const remainingSeconds = Math.round(seconds % 60);
     return `${minutes}m ${remainingSeconds}s`;
   };
+
+  const [showProfile, setShowProfile] = useState(false);
+  const handleCancel = () => {
+    setShowProfile(!showProfile); // Toggle profile visibility
+  };
+
+  const ProfileRef = useRef(null);
+  const profileToggleRef = useRef(null);
+  // const handleClickOutside = (event) => {
+  //   if (ProfileRef.current && !ProfileRef.current.contains(event.target)) {
+  //     setShowProfile(false);
+  //   }
+  // };
+  // const handleClickOutside = (event) => {
+  //   // Don't close the profile if clicking on the profile toggle button
+  //   if (
+  //     profileToggleRef.current &&
+  //     profileToggleRef.current.contains(event.target)
+  //   ) {
+  //     return;
+  //   }
+
+  //   // Close the profile if clicking outside the profile settings and not on the toggle button
+  //   if (ProfileRef.current && !ProfileRef.current.contains(event.target)) {
+  //     setShowProfile(false);
+  //   }
+  // };
+  const handleClickOutside = (event) => {
+    // Don't close the profile if clicking on the profile toggle button
+    if (
+      profileToggleRef.current &&
+      profileToggleRef.current.contains(event.target)
+    ) {
+      return;
+    }
+  
+    // Close the profile if clicking outside the profile settings and not on the toggle button
+    if (
+      ProfileRef.current &&
+      !ProfileRef.current.contains(event.target)
+    ) {
+      setShowProfile(false);
+    }
+  };
+  useEffect(() => {
+    // Add event listener when the component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+  
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []); // Empty dependency array ensures this runs only once
+
   return (
     <div
       className={`${
@@ -101,12 +175,13 @@ const Dashboard = () => {
           >
             {isNightMode ? (
               <>
-                Light mode <img src="/Light mode.png" alt="" className="ml-2" />
+                Light mode{" "}
+                <img src="./Light mode.png" alt="" className="ml-2" />
               </>
             ) : (
               <>
                 Night mode
-                <img src="/Vector (4).webp" alt="" className="ml-2" />
+                <img src="./Vector (4).webp" alt="" className="ml-2" />
               </>
             )}
           </button>
@@ -116,18 +191,28 @@ const Dashboard = () => {
               isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
             } border rounded-lg flex items-center w-full md:w-auto`}
           >
-            <img src="/Vector (5).webp" alt="" className="w-5 h-5 ml-3" />
+            <img src="./Vector (5).webp" alt="" className="w-5 h-5 ml-3" />
             <input
               type="text"
               placeholder="Search..."
               className="ml-4 p-2 mr-16 outline-none bg-transparent w-full md:w-48"
             />
           </div>
-          <img src="/Rectangle.webp" alt="" className="w-10 h-10" />
+          <div
+            ref={profileToggleRef}
+            className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white text-3xl font-bold cursor-pointer"
+            onClick={handleCancel}
+          >
+            {profileData?.username?.slice(0, 1)}
+          </div>
+          {/* <img src="./Rectangle.webp" alt="" className="w-10 h-10 cursor-pointer" onClick={handleCancel} /> */}
         </div>
       </div>
-      <ProfileSettings></ProfileSettings>
-
+      {showProfile && (
+        <div ref={ProfileRef}>
+          <ProfileSettings handleCancel={handleCancel}></ProfileSettings>
+        </div>
+      )}
 
       <div
         className={`${
@@ -168,7 +253,7 @@ const Dashboard = () => {
               : "bg-white text-gray-800"
           } shadow-sm text-end text-lg p-6 rounded-lg `}
         >
-          <img src="/div.webp" alt="" className="absolute" />
+          <img src="./div.webp" alt="" className="absolute" />
           <h1 className="text-3xl font-bold mt-12 flex">
             {dashboard.total_calls}
           </h1>
@@ -182,7 +267,7 @@ const Dashboard = () => {
               : "bg-white text-gray-800"
           } shadow-sm text-end text-lg p-6 rounded-lg  `}
         >
-          <img src="/div (1).webp" alt="" className="absolute" />
+          <img src="./div (1).webp" alt="" className="absolute" />
           <h1 className="text-3xl font-bold mt-12 flex">
             {dashboard.successful_calls}
           </h1>
@@ -196,7 +281,7 @@ const Dashboard = () => {
               : "bg-white text-gray-800"
           } shadow-sm text-end text-lg p-6 rounded-lg `}
         >
-          <img src="/div (2).webp" alt="" className="absolute" />
+          <img src="./div (2).webp" alt="" className="absolute" />
           <h1 className="text-3xl font-bold mt-12 flex">
             {dashboard.total_duration_minutes} Min
           </h1>
@@ -210,7 +295,7 @@ const Dashboard = () => {
               : "bg-white text-gray-800"
           } shadow-sm text-end text-lg p-6 rounded-lg`}
         >
-          <img src="/div (3).webp" alt="" className="absolute" />
+          <img src="./div (3).webp" alt="" className="absolute" />
           <h1 className="text-3xl font-bold mt-12 flex">
             {dashboard.total_call_cost_with_extra_charge}
           </h1>
@@ -229,7 +314,7 @@ const Dashboard = () => {
           Call Volume Trends
           <div className="relative flex justify-end -mt-4 text-sm">
             <button onClick={() => toggleDropdown("CallVolume")}>
-              <img src="/Frame (1).webp" alt="" />
+              <img src="./Frame (1).webp" alt="" />
             </button>
             {dropdownState.CallVolume && (
               <div className="absolute text-end left-[85%] mt-2 w-30 bg-white border rounded-lg shadow-md">
@@ -250,7 +335,7 @@ const Dashboard = () => {
             } rounded-lg p-6 m-6`}
           >
             <img
-              src="/call-volume-trends 2.webp"
+              src="./call-volume-trends 2.webp"
               alt=""
               className="w-full mt-5 p-4"
             />
@@ -267,7 +352,7 @@ const Dashboard = () => {
           Success Rate Analysis
           <div className="relative flex justify-end -mt-4 text-sm">
             <button onClick={() => toggleDropdown("SuccessRate")}>
-              <img src="/Frame (1).webp" alt="" />
+              <img src="./Frame (1).webp" alt="" />
             </button>
             {dropdownState.SuccessRate && (
               <div className="absolute text-end left-[85%] mt-2 w-30 bg-white border rounded-lg shadow-md">
@@ -288,7 +373,7 @@ const Dashboard = () => {
             } rounded-lg p-6 m-6`}
           >
             <img
-              src={isNightMode ? "/image 23.webp" : "/CALL 2.webp"}
+              src={isNightMode ? "./image 23.webp" : "/CALL 2.webp"}
               alt="Success Rate"
               className="w-full mt-5 p-4"
             />
@@ -306,7 +391,10 @@ const Dashboard = () => {
       >
         <div className="flex justify-between items-center border-b p-6">
           <h2 className="text-lg font-semibold">Recent Calls</h2>
-          <button  onClick={()=>navigate('/call-logs')} className="text-blue-500 font-medium hover:underline">
+          <button
+            onClick={() => navigate("/call-logs")}
+            className="text-blue-500 font-medium hover:underline"
+          >
             View All
           </button>
         </div>
@@ -328,7 +416,7 @@ const Dashboard = () => {
             </thead>
 
             <tbody>
-              {dashboard.executions?.slice(0,10).map((execution) => (
+              {dashboard.executions?.slice(0, 10).map((execution) => (
                 <tr key={execution.id} className="text-sm border-t">
                   <td className="py-3">
                     {execution.telephony_data?.to_number || "N/A"}

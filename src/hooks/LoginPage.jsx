@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../helper/axios";
 import Swal from "sweetalert2";
-import { useAuth } from "../contexts/AuthContext"; 
+import { useLogin } from "../contexts/AuthContext";
 
 const LoginPage = () => {
-  const { login } = useAuth(); 
+  const { dispatch } = useLogin();
   const [loginData, setLoginData] = useState({
     email: "",
     user_password: "",
@@ -15,7 +15,7 @@ const LoginPage = () => {
 
   const loginUser = async (e) => {
     e.preventDefault();
-    console.log("login data", loginData);
+    // console.log("login data", loginData);
 
     try {
       const response = await axios.post("/api/ai_calling/login/", loginData, {
@@ -23,52 +23,47 @@ const LoginPage = () => {
           "Content-type": "application/json",
         },
       });
+      const user_data = response.data;
+      const { token: newToken } = response.data;
 
-      console.log(response);
-      const newToken = response.data.token;
+      if (!newToken) {
+        // If no token is present, show an error and return
+        throw new Error("Token missing. Login failed.");
+      }
 
-      // Store token in localStorage (use consistent key: "authToken")
-      localStorage.setItem("authToken", newToken);
+      localStorage.setItem("user", JSON.stringify(user_data));
+      localStorage.setItem("token", newToken);
 
       // Call the login function from AuthContext to update isAuthenticated
-      login(loginData.email, loginData.user_password);
+      // login(loginData.email, loginData.user_password);
+      dispatch({ type: "LOGIN", payload: { token: newToken } });
 
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "success",
-        title: "Logged in successfully",
-      });
-
-      console.log("Navigating to dashboard...");
-      navigate("/dashboard");
-    } catch (e) {
-      if (e.response) {
-        Swal.fire({
-          icon: "error",
-          title: `${e.response.data.detail || "Login failed"}`,
+      if (newToken) {
+        localStorage.setItem("token", newToken);
+        navigate("/dashboard");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
         });
-      } else if (e.request) {
-        Swal.fire({
-          icon: "error",
-          title: "No response received from the server",
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: e.message,
+        Toast.fire({
+          icon: "success",
+          title: "Logged in successfully",
         });
       }
+    } catch (e) {
+      console.log(e);
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: "Invalid email or password. Please try again.",
+      });
     }
   };
 
@@ -82,15 +77,17 @@ const LoginPage = () => {
   return (
     <div className="flex h-screen p-16">
       <div className="w-[60%] flex justify-center items-center">
-        <img className="h-[80%]" src="/SignIn.png" alt="Login" />
+        <img className="h-[80%]" src="./SignIn.png" alt="Login" />
       </div>
       <div className="shadow-lg flex-1 rounded-xl px-10">
         <div className="">
-          <img className="m-auto" src="/logo.png" alt="Logo" />
+          <img className="m-auto" src="./logo.png" alt="Logo" />
         </div>
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-4xl font-semibold">Sign In</h1>
-          <h1 className="text-gray-600">Welcome back! Please enter your details</h1>
+          <h1 className="text-gray-600">
+            Welcome back! Please enter your details
+          </h1>
         </div>
         <form onSubmit={loginUser} className="mt-10 flex flex-col gap-3">
           <h1 className="text-gray-600 font-semibold">Email</h1>
@@ -114,9 +111,9 @@ const LoginPage = () => {
             required
           />
           <div className="flex justify-end">
-            <h1 className="text-pink-600 font-semibold hover:cursor-pointer">
+            {/* <h1 className="text-pink-600 font-semibold hover:cursor-pointer">
               Forgot Password?
-            </h1>
+            </h1> */}
           </div>
           <button
             type="submit"
@@ -125,19 +122,19 @@ const LoginPage = () => {
             Sign in
           </button>
         </form>
-        <div className="flex justify-center items-center gap-3 mt-4">
-          <img src="/line.png" alt="Line" />
+        {/* <div className="flex justify-center items-center gap-3 mt-4">
+          <img src="./line.png" alt="Line" />
           <h1>OR</h1>
-          <img src="/line.png" alt="Line" />
-        </div>
-        <div className="flex justify-center items-center gap-2">
+          <img src="./line.png" alt="Line" />
+        </div> */}
+        {/* <div className="flex justify-center items-center gap-2">
           <h1 className="text-gray-600">Didn't have an Account?</h1>
           <Link to={"/signup"}>
             <button className="text-pink-600 font-semibold hover:cursor-pointer">
               Sign-up
             </button>
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

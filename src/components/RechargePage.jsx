@@ -16,7 +16,7 @@ const RechargePage = () => {
   const [orderId, setOrderId] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null);
 
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("token");
 
   const payloadBase64 = token.split(".")[1]; 
   const payloadDecoded = JSON.parse(atob(payloadBase64));
@@ -52,7 +52,7 @@ const RechargePage = () => {
   }, []);
 
   const createOrder = async () => {
-    console.log(amount);
+    // console.log(amount);
     if (!user_id || !amount || !receipt) {
       alert("Please enter all required fields.");
       return;
@@ -73,7 +73,7 @@ const RechargePage = () => {
       if (response.data.status === "success") {
         setOrderId(response.data.order_id);
         setOrderDetails(response.data.order_details);
-        console.log(response);
+        // console.log(response);
         return response.data.order_id;
       } else {
         throw new Error("Order creation failed");
@@ -139,7 +139,7 @@ const RechargePage = () => {
               navigate('/dashboard')
             })
           }
-          console.log(verifyResponse);
+          // console.log(verifyResponse);
         } catch (error) {
           console.error("Error verifying payment:", error);
         }
@@ -167,7 +167,7 @@ const RechargePage = () => {
           <div className="mb-4">
             <h1 className="text-2xl font-semibold text-gray-700">
               <div className="border-b mx-auto flex justify-center">
-                <img src="/MAITRI AI LOGO 4.webp" alt="Logo" />
+                <img src="./MAITRI AI LOGO 4.webp" alt="Logo" />
               </div>
             </h1>
           </div>

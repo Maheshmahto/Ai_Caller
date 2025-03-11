@@ -13,12 +13,12 @@ const Billing = () => {
   const { isNightMode ,toggleNightMode } = useNightMode();
   const [load, setLoad] = useState(true);
   const [plan, setPlans] = useState([]);
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("token");
 
   const subPlans = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.29.83:8001/api/subscription-plans"
+        "/api/subscription-plans"
       );
       console.log(response.data);
       setPlans(response.data);
@@ -66,14 +66,14 @@ const Billing = () => {
               isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
             } ml-3 mt-2 mb-3 border rounded-lg flex`}
           >
-            <img src="/Vector (5).webp" alt="" className="w-5 h-5 mt-3 ml-3" />
+            <img src="./Vector (5).webp" alt="" className="w-5 h-5 mt-3 ml-3" />
             <input
               type="text"
               placeholder="Search..."
               className="mr-16 ml-4 outline-none bg-transparent"
             />
           </div>
-          <img src="/Rectangle.webp" alt="" className="w-10 h-10 mt-2 ml-8 " />
+          <img src="./Rectangle.webp" alt="" className="w-10 h-10 mt-2 ml-8 " />
         </div> */}
          <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-4">
           <button
@@ -82,12 +82,12 @@ const Billing = () => {
           >
             {isNightMode ? (
               <>
-                Light mode <img src="/Light mode.png" alt="" className="ml-2" />
+                Light mode <img src="./Light mode.png" alt="" className="ml-2" />
               </>
             ) : (
               <>
                 Night mode
-                <img src="/Vector (4).webp" alt="" className="ml-2" />
+                <img src="./Vector (4).webp" alt="" className="ml-2" />
               </>
             )}
           </button>
@@ -97,14 +97,14 @@ const Billing = () => {
               isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
             } border rounded-lg flex items-center w-full md:w-auto`}
           >
-            <img src="/Vector (5).webp" alt="" className="w-5 h-5 ml-3" />
+            <img src="./Vector (5).webp" alt="" className="w-5 h-5 ml-3" />
             <input
               type="text"
               placeholder="Search..."
               className="ml-4 p-2 mr-16 outline-none bg-transparent w-full md:w-48"
             />
           </div>
-          <img src="/Rectangle.webp" alt="" className="w-10 h-10" />
+          <img src="./Rectangle.webp" alt="" className="w-10 h-10" />
         </div>
       </div>
 
@@ -173,7 +173,7 @@ const Billing = () => {
                             document.body.style.overflow = "auto";
                           }}
                         >
-                          <img src="/Frame (4).webp" alt="" />
+                          <img src="./Frame (4).webp" alt="" />
                         </button>
                       </h2>
 
@@ -320,7 +320,7 @@ const Billing = () => {
                   <ul className="mt-6 text-left space-y-3">
                     <li className="text-gray-900 text-lg flex items-center gap-2">
                       <img
-                        src="/Frame (2).webp"
+                        src="./Frame (2).webp"
                         alt="check icon"
                         className="w-5 h-5"
                       />
@@ -328,7 +328,7 @@ const Billing = () => {
                     </li>
                     <li className="text-gray-900 text-lg flex items-center gap-2">
                       <img
-                        src="/Frame (2).webp"
+                        src="./Frame (2).webp"
                         alt="check icon"
                         className="w-5 h-5"
                       />
@@ -364,16 +364,16 @@ const Billing = () => {
                   <ul className="text-lg  mt-4">
                     <li className="flex items-center gap-2">
                     
-                      <img src="/Frame (2).webp" alt="" />
+                      <img src="./Frame (2).webp" alt="" />
                       Unlimited Sub Accounts
                     </li>
                     <li className="flex items-center gap-2">
                   
-                      <img src="/Frame (2).webp" alt="" />
+                      <img src="./Frame (2).webp" alt="" />
                       Unlimited Assistants
                     </li>
                     <li className="flex items-center gap-2">
-                      <img src="/Frame (2).webp" alt="" />
+                      <img src="./Frame (2).webp" alt="" />
                       Unlimited Minutes
                     </li>
                   </ul>
@@ -407,7 +407,7 @@ const Billing = () => {
                     : "bg-gray-100 text-gray-700"
                 } flex border justify-center items-center px-4 gap-2  text-lg  rounded-lg`}
               >
-                <img src="/svg.webp" alt="" className="" />
+                <img src="./svg.webp" alt="" className="" />
                 Filter
               </button>
               <button
@@ -417,7 +417,7 @@ const Billing = () => {
                     : "bg-gray-100 text-gray-700"
                 } flex border justify-center items-center px-4 gap-2  text-lg  rounded-lg`}
               >
-                <img src="/svg (2).webp" alt="" className="" />
+                <img src="./svg (2).webp" alt="" className="" />
                 Last 30 days
               </button>
             </div>
@@ -431,7 +431,7 @@ const Billing = () => {
             } border-2 border-dotted flex items-center justify-center rounded-lg`}
           >
             <div className="text-center flex flex-col justify-center items-center my-20">
-              <img src="/Frame (3).webp" alt="" className="  " />
+              <img src="./Frame (3).webp" alt="" className="  " />
               <h1 className="text-2xl font-bold">
                 No Voice Usage Records Found
               </h1>
@@ -439,7 +439,7 @@ const Billing = () => {
                 Start making calls to see your usage statistics
               </h2>
               <button className="border flex text-white text-lg bg-customPink  hover:bg-customDarkPink rounded-lg px-5 p-3 items-center gap-2 mt-6">
-                <img src="/svg (3).webp" alt="" />
+                <img src="./svg (3).webp" alt="" />
                 Make Your First Call
               </button>
             </div>

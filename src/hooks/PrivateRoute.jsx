@@ -1,10 +1,14 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { Outdent } from "lucide-react";
+import { Navigate, Outlet } from "react-router-dom";
+// import { useAuth } from "../contexts/AuthContext";
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = !!localStorage.getItem('token'); 
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+  return children ? <>{children}</> : <Outlet />;
 };
 
 export default PrivateRoute;

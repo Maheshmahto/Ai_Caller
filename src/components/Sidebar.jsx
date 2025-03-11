@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNightMode } from "../contexts/NightModeContext";
-import { AuthContext } from "../contexts/AuthContext";
+import { useLogin } from "../contexts/AuthContext";
 import { useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -10,61 +10,39 @@ const Sidebar = () => {
   const [active, setActive] = useState(location.pathname);
   // const [active, setActive] = useState("false");
   const { isNightMode, toggleNightMode } = useNightMode();
-//   const handleLogout = () => {
-//     const result = Swal.fire({
-//       title: "Are you sure?",
-//       text: "You want to Logout",
-//       icon: "warning",
-//       showCancelButton: true,
-//       confirmButtonColor: "#d33",
-//       cancelButtonColor: "#3085d6",
-//       confirmButtonText: "Yes, delete it!",
-//     });
-//     if (result.isConfirmed) {
-//       const { logout } = useContext(AuthContext);
-//     }
-//   };
-const { logout } = useContext(AuthContext); // Get logout function here
 
-const handleLogout = async () => {
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "You want to Logout",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, Logout!",
-  });
+  const { logout } = useLogin(); // Get logout function here
 
-  if (result.isConfirmed) {
-    logout(); // Call the logout function
-  }
-};
+  const handleLogout = async () => {
+  
+
+    await  logout(); // Call the logout function
+  };
   const menuItems = [
     {
       name: "Dashboard",
-      path: "/",
-      icon: "/i-1.webp",
-      activeIcon: "/dashboard icon.webp",
+      path: "/dashboard",
+      icon: "./i-1.webp",
+      // icon: "",
+      activeIcon: "./dashboard icon.webp",
     },
     {
       name: "Call Logs",
       path: "/call-logs",
-      icon: "/Frame.webp",
-      activeIcon: "/call icon.webp",
+      icon: "./Frame.webp",
+      activeIcon: "./call_icon.webp",
     },
     {
       name: "Billing & Usage",
       path: "/billing",
-      icon: "/Frame-1.webp",
-      activeIcon: "/Vector (1) (1).webp",
+      icon: "./Frame-1.webp",
+      activeIcon: "./Vector (1) (1).webp",
     },
     {
       name: "Campaigns",
       path: "/campaigns",
-      icon: "/Frame-2.webp",
-      activeIcon: "/Vector (2).webp",
+      icon: "./Frame-2.webp",
+      activeIcon: "./Vector (2).webp",
     },
   ];
   useEffect(() => {
@@ -80,7 +58,7 @@ const handleLogout = async () => {
       {/* Logo Section */}
       <div className="border-b-2 p-5">
         <div className="flex -ml-8 p-4 justify-center items-center">
-          <img src="/MAITRI AI LOGO 4.webp" alt="logo" />
+          <img src="./MAITRI AI LOGO 4.webp" alt="logo" />
         </div>
       </div>
 
@@ -88,14 +66,14 @@ const handleLogout = async () => {
       <div
         className={`${
           isNightMode ? "bg-gray-950 text-white" : "bg-white text-gray-700"
-        } text-2xl ml-6 mt-10 p-2`}
+        }   mt-10 p-2`}
       >
         {menuItems.map((item) => (
           <Link
             to={item.path}
             key={item.name}
             onClick={() => setActive(item.path)}
-            className={`flex mb-7 gap-3 px-4 py-3 w-full rounded-lg transition-all duration-300
+            className={`flex items-center mb-7 gap-3 px-4 py-3 w-full rounded-lg transition-all duration-300
                             ${
                               active === item.path
                                 ? "bg-blue-100 text-pink-500"

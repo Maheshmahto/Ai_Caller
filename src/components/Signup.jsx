@@ -30,7 +30,7 @@ const Signup = () => {
 
   const registerUser = async (e) => {
     e.preventDefault();
-    console.log("Sending Data:", register);
+    // console.log("Sending Data:", register);
     try {
       const response = await axios.post(
         "/api/insert/ai_calling_register_user/",
@@ -47,7 +47,7 @@ const Signup = () => {
           icon: "success",
         });
       }
-      console.log(response);
+      // console.log(response);
     } catch (e) {
       console.log(e);
       Swal.fire({
@@ -59,11 +59,11 @@ const Signup = () => {
   return (
     <div className="flex p-11 border">
       <div className="w-[50%] flex justify-center items-center">
-        <img src="/call ai.webp" alt="image" className="max-w-[60%]" />
+        <img src="./call ai.webp" alt="image" className="max-w-[60%]" />
       </div>
       <div className="w-[60%] p-5 rounded-2xl shadow-xl">
         <div className="flex justify-center items-center">
-          <img src="/MAITRI AI LOGO 4.webp" alt="logo" />
+          <img src="./MAITRI AI LOGO 4.webp" alt="logo" />
         </div>
         <h1 className="flex justify-center items-center font-bold text-3xl">
           Create an account
