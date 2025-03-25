@@ -1,6 +1,6 @@
 import axios from "axios";
 const ApiAxios = axios.create({
-    // baseURL: "http://192.168.29.82:8001/",
+    // baseURL: "http://192.168.29.82:8006/",
     baseURL: "https://api.maitriai.com/ai_assistant",
     headers: {
       "Content-Type": "application/json",

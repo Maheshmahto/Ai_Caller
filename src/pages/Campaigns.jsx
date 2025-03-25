@@ -243,9 +243,12 @@ const Campaigns = () => {
         </div>
       )}
       {load && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
-          <Loader />
-        </div>
+        // <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+        //   <Loader />
+        // </div>
+        <div className="w-[82%] fixed inset-y-0 right-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+        <Loader />
+      </div>
       )}
       {showCalendar && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-70 z-[1000]">

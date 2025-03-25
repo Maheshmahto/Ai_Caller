@@ -135,19 +135,16 @@ const Dashboard = () => {
     ) {
       return;
     }
-  
+
     // Close the profile if clicking outside the profile settings and not on the toggle button
-    if (
-      ProfileRef.current &&
-      !ProfileRef.current.contains(event.target)
-    ) {
+    if (ProfileRef.current && !ProfileRef.current.contains(event.target)) {
       setShowProfile(false);
     }
   };
   useEffect(() => {
     // Add event listener when the component mounts
     document.addEventListener("mousedown", handleClickOutside);
-  
+
     // Clean up the event listener when the component unmounts
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -176,12 +173,12 @@ const Dashboard = () => {
             {isNightMode ? (
               <>
                 Light mode{" "}
-                <img src="./Light mode.png" alt="" className="ml-2" />
+                <img src="./images/Light mode.png" alt="" className="ml-2" />
               </>
             ) : (
               <>
                 Night mode
-                <img src="./Vector (4).webp" alt="" className="ml-2" />
+                <img src="./images/material-symbols-light_dark-mode-rounded.png" alt="" className="ml-2" />
               </>
             )}
           </button>
@@ -191,7 +188,11 @@ const Dashboard = () => {
               isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
             } border rounded-lg flex items-center w-full md:w-auto`}
           >
-            <img src="./Vector (5).webp" alt="" className="w-5 h-5 ml-3" />
+            <img
+              src="./images/Frame.png"
+              alt=""
+              className="w-5 h-5 ml-3"
+            />
             <input
               type="text"
               placeholder="Search..."
@@ -205,7 +206,7 @@ const Dashboard = () => {
           >
             {profileData?.username?.slice(0, 1)}
           </div>
-          {/* <img src="./Rectangle.webp" alt="" className="w-10 h-10 cursor-pointer" onClick={handleCancel} /> */}
+          {/* <img src="./images/Rectangle.webp" alt="" className="w-10 h-10 cursor-pointer" onClick={handleCancel} /> */}
         </div>
       </div>
       {showProfile && (
@@ -240,7 +241,10 @@ const Dashboard = () => {
         </div>
       </div>
       {load && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+        // <div className="w-[80%] fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+        //   <Loader />
+        // </div>
+        <div className="w-[82%] fixed inset-y-0 right-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
           <Loader />
         </div>
       )}
@@ -253,7 +257,7 @@ const Dashboard = () => {
               : "bg-white text-gray-800"
           } shadow-sm text-end text-lg p-6 rounded-lg `}
         >
-          <img src="./div.webp" alt="" className="absolute" />
+          <img src="./images/div.png" alt="" className="absolute" />
           <h1 className="text-3xl font-bold mt-12 flex">
             {dashboard.total_calls}
           </h1>
@@ -267,7 +271,7 @@ const Dashboard = () => {
               : "bg-white text-gray-800"
           } shadow-sm text-end text-lg p-6 rounded-lg  `}
         >
-          <img src="./div (1).webp" alt="" className="absolute" />
+          <img src="./images/div (1).png" alt="" className="absolute" />
           <h1 className="text-3xl font-bold mt-12 flex">
             {dashboard.successful_calls}
           </h1>
@@ -281,7 +285,7 @@ const Dashboard = () => {
               : "bg-white text-gray-800"
           } shadow-sm text-end text-lg p-6 rounded-lg `}
         >
-          <img src="./div (2).webp" alt="" className="absolute" />
+          <img src="./images/div (2).png" alt="" className="absolute" />
           <h1 className="text-3xl font-bold mt-12 flex">
             {dashboard.total_duration_minutes} Min
           </h1>
@@ -295,7 +299,7 @@ const Dashboard = () => {
               : "bg-white text-gray-800"
           } shadow-sm text-end text-lg p-6 rounded-lg`}
         >
-          <img src="./div (3).webp" alt="" className="absolute" />
+          <img src="./images/div (3).png" alt="" className="absolute" />
           <h1 className="text-3xl font-bold mt-12 flex">
             {dashboard.total_call_cost_with_extra_charge}
           </h1>
@@ -314,7 +318,7 @@ const Dashboard = () => {
           Call Volume Trends
           <div className="relative flex justify-end -mt-4 text-sm">
             <button onClick={() => toggleDropdown("CallVolume")}>
-              <img src="./Frame (1).webp" alt="" />
+              <img src="./images/Frame (1).webp" alt="" />
             </button>
             {dropdownState.CallVolume && (
               <div className="absolute text-end left-[85%] mt-2 w-30 bg-white border rounded-lg shadow-md">
@@ -335,7 +339,7 @@ const Dashboard = () => {
             } rounded-lg p-6 m-6`}
           >
             <img
-              src="./call-volume-trends 2.webp"
+              src="./images/call-volume-trends 2.webp"
               alt=""
               className="w-full mt-5 p-4"
             />
@@ -352,7 +356,7 @@ const Dashboard = () => {
           Success Rate Analysis
           <div className="relative flex justify-end -mt-4 text-sm">
             <button onClick={() => toggleDropdown("SuccessRate")}>
-              <img src="./Frame (1).webp" alt="" />
+              <img src="./images/Frame (1).webp" alt="" />
             </button>
             {dropdownState.SuccessRate && (
               <div className="absolute text-end left-[85%] mt-2 w-30 bg-white border rounded-lg shadow-md">
@@ -373,7 +377,7 @@ const Dashboard = () => {
             } rounded-lg p-6 m-6`}
           >
             <img
-              src={isNightMode ? "./image 23.webp" : "/CALL 2.webp"}
+              src={isNightMode ? "./images/image 23.webp" : "/CALL 2.webp"}
               alt="Success Rate"
               className="w-full mt-5 p-4"
             />

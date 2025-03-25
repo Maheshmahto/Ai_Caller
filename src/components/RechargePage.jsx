@@ -167,7 +167,7 @@ const RechargePage = () => {
           <div className="mb-4">
             <h1 className="text-2xl font-semibold text-gray-700">
               <div className="border-b mx-auto flex justify-center">
-                <img src="./MAITRI AI LOGO 4.webp" alt="Logo" />
+                <img src="./images/MAITRIAILOGO4.png" alt="Logo" />
               </div>
             </h1>
           </div>

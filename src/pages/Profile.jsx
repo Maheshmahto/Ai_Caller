@@ -66,7 +66,7 @@ const ProfileSettings = ({ handleCancel }) => {
               onClick={handleCancel}
               className="cursor-pointer"
             />
-          </div>
+          </div>  
 
           <div className="space-y-4">
             {/* Admin Profile Section */}

@@ -174,14 +174,14 @@ const CallLog = () => {
               isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
             } ml-3 mt-2 mb-3 border rounded-lg flex`}
           >
-            <img src="./Vector (5).webp" alt="" className="w-5 h-5 mt-3 ml-3" />
+            <img src="./images/Vector (5).webp" alt="" className="w-5 h-5 mt-3 ml-3" />
             <input
               type="text"
               placeholder="Search..."
               className="mr-16 ml-4 outline-none bg-transparent"
             />
           </div>
-          <img src="./Rectangle.webp" alt="" className="w-10 h-10 mt-2 ml-8" />
+          <img src="./images/Rectangle.webp" alt="" className="w-10 h-10 mt-2 ml-8" />
         </div>
       </div> */}
          <div className="flex flex-col md:flex-row justify-between">
@@ -199,12 +199,12 @@ const CallLog = () => {
           >
             {isNightMode ? (
               <>
-                Light mode <img src="./Light mode.png" alt="" className="ml-2" />
+                Light mode <img src="./images/Light mode.png" alt="" className="ml-2" />
               </>
             ) : (
               <>
                 Night mode
-                <img src="./Vector (4).webp" alt="" className="ml-2" />
+                <img src="./images/material-symbols-light_dark-mode-rounded.png" alt="" className="ml-2" />
               </>
             )}
           </button>
@@ -214,14 +214,14 @@ const CallLog = () => {
               isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
             } border rounded-lg flex items-center w-full md:w-auto`}
           >
-            <img src="./Vector (5).webp" alt="" className="w-5 h-5 ml-3" />
+            <img src="./images/Frame.png" alt="" className="w-5 h-5 ml-3" />
             <input
               type="text"
               placeholder="Search..."
               className="ml-4 p-2 mr-16 outline-none bg-transparent w-full md:w-48"
             />
           </div>
-          <img src="./Rectangle.webp" alt="" className="w-10 h-10" />
+          <img src="./images/img.png" alt="" className="w-10 h-10" />
         </div>
       </div>
 
@@ -235,7 +235,7 @@ const CallLog = () => {
           onClick={() => setShowForm(true)}
           className="flex text-lg text-white bg-customPink rounded-md p-2 mr-4 font-medium"
         >
-          <img src="./i (2).webp" alt="" className="mr-2 ml-2 mt-1" />
+          <img src="./images/i.png" alt="" className="mr-2 ml-2 mt-1" />
           Call Numbers
         </button>
       </div>
@@ -250,7 +250,7 @@ const CallLog = () => {
             <h2 className="text-2xl flex justify-between font-bold mb-7">
               Call Numbers
               <button onClick={() => setShowForm(false)}>
-                <img src="./Frame (4).webp" alt="" />
+                <img src="./images/button.png" alt="" />
               </button>
             </h2>
 
@@ -263,6 +263,7 @@ const CallLog = () => {
                   placeholder="Enter a number"
                   inputMode="numeric"
                   value={phoneNumber}
+                  required
                   onChange={(e) => {
                     if (e.target.value.length <= 10) {
                       setPhoneNumber(e.target.value);
@@ -307,9 +308,12 @@ const CallLog = () => {
         </div>
       )}
       {load && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
-          <Loader />
-        </div>
+        // <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+        //   <Loader />
+        // </div>
+        <div className="w-[82%] fixed inset-y-0 right-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+        <Loader />
+      </div>
       )}
 
       <div className="flex justify-between mt-10">
@@ -319,7 +323,7 @@ const CallLog = () => {
               isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
             } mt-3 p-2 mb-3 border rounded-lg flex`}
           >
-            <img src="./Vector (5).webp" alt="" className="w-5 h-5 mt-1" />
+            <img src="./images/Frame.png" alt="" className="w-5 h-5 mt-1" />
             <input
               type="text"
               placeholder="Search calls..."
@@ -333,11 +337,11 @@ const CallLog = () => {
           } flex p-2 gap-5 items-center text-lg font-medium`}
         >
           <button className="flex border p-2 pr-4 rounded-lg">
-            <img src="./svg.webp" alt="" className="p-2" />
+            <img src="./images/i (1).png" alt="" className="p-2" />
             Filter
           </button>
           <button className="flex border p-2 pr-4 rounded-lg">
-            <img src="./svg (1).webp" alt="" className="p-2" />
+            <img src="./images/i (2).png" alt="" className="p-2" />
             Export
           </button>
         </div>

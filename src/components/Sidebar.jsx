@@ -22,27 +22,28 @@ const Sidebar = () => {
     {
       name: "Dashboard",
       path: "/dashboard",
-      icon: "./i-1.webp",
+      icon: "./images/Dashboard.png",
       // icon: "",
-      activeIcon: "./dashboard icon.webp",
+      // activeIcon: "./images/dashboadicon.webp",
+      activeIcon: "./images/activeDahboard.png",
     },
     {
       name: "Call Logs",
       path: "/call-logs",
-      icon: "./Frame.webp",
-      activeIcon: "./call_icon.webp",
+      icon: "./images/callLogs.png",
+      activeIcon: "./images/ActiveCallLog.png",
     },
     {
       name: "Billing & Usage",
       path: "/billing",
-      icon: "./Frame-1.webp",
-      activeIcon: "./Vector (1) (1).webp",
+      icon: "./images/Billing & Usage.png",
+      activeIcon: "./images/Billing & Usage (1).png",
     },
     {
       name: "Campaigns",
       path: "/campaigns",
-      icon: "./Frame-2.webp",
-      activeIcon: "./Vector (2).webp",
+      icon: "./images/Campaigns icon.png",
+      activeIcon: "./images/Campaigns icon (1).png",
     },
   ];
   useEffect(() => {
@@ -58,7 +59,7 @@ const Sidebar = () => {
       {/* Logo Section */}
       <div className="border-b-2 p-5">
         <div className="flex -ml-8 p-4 justify-center items-center">
-          <img src="./MAITRI AI LOGO 4.webp" alt="logo" />
+          <img src="./images/MAITRIAILOGO4.png" alt="logo" />
         </div>
       </div>
 
