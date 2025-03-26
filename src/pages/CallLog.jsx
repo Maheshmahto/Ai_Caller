@@ -4,25 +4,53 @@ import axios from "../helper/axios";
 import CallDetails from "./CallDetails";
 import Swal from "sweetalert2";
 import Loader from "../components/Loader";
+import ProfileSettings from "./Profile";
+
+
 const CallLog = () => {
   const [showForm, setShowForm] = useState(false);
-  const { isNightMode,toggleNightMode } = useNightMode();
+  const { isNightMode, toggleNightMode } = useNightMode();
   const [dashboard, setDashboard] = useState({});
   const [show, setShow] = useState(false);
-  const [selectedExecution, setSelectedExecution] = useState(null); 
+  const [selectedExecution, setSelectedExecution] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setloading] = useState(false);
   const [load, setLoad] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [profileData, setProfileData] = useState({});
+  const [showProfile, setShowProfile] = useState(false);
+
+  const ProfileRef = (null);
+  const profileToggleRef = (null);
+
+  /** ✅ Function to get user profile */
+  const getMyProfile = async () => {
+    try {
+      const response = await axios.get("/api/get_my_profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      // console.log(response.data.data);
+      setProfileData(response.data.data);
+    } catch (e) {
+      Swal.fire({
+        title: e.response?.data?.message || "Error fetching profile",
+        icon: "error",
+      });
+    }
+  };
 
   const token = localStorage.getItem("token");
 
-  const payloadBase64 = token.split(".")[1]; 
+  const payloadBase64 = token.split(".")[1];
   const payloadDecoded = JSON.parse(atob(payloadBase64));
   const user_id = payloadDecoded.user_id;
 
   const handleShowDetails = (execution) => {
     setSelectedExecution(execution);
-    setShow(!show); 
+    setShow(!show);
   };
 
   const agentDashboard = async () => {
@@ -88,6 +116,7 @@ const CallLog = () => {
 
   useEffect(() => {
     agentDashboard();
+    getMyProfile();
   }, []);
 
   const formatDuration = (seconds) => {
@@ -138,9 +167,8 @@ const CallLog = () => {
       const { first_name, last_name, variable1, variable2 } =
         context_details.recipient_data;
       return (
-        `${first_name || variable1 || ""} ${
-          last_name || variable2 || ""
-        }`.trim() || "Unknown"
+        `${first_name || variable1 || ""} ${last_name || variable2 || ""
+          }`.trim() || "Unknown"
       );
     }
     if (transcript) {
@@ -155,11 +183,27 @@ const CallLog = () => {
     return "Unknown";
   };
 
+  // **Search Filter Implementation**
+  const filteredExecutions = dashboard?.executions ? dashboard.executions.filter((execution) => {
+    const id = execution.id.toLowerCase();
+    const name = getName(execution).toLowerCase();
+    const status = execution.status.toLowerCase();
+    const phoneNumber = execution.telephony_data?.to_number || "";
+
+    return (
+      id.includes(searchQuery.toLowerCase()) ||
+      name.includes(searchQuery.toLowerCase()) ||
+      status.includes(searchQuery.toLowerCase()) ||
+      phoneNumber.includes(searchQuery.toLowerCase())
+    );
+  }) : [];
+
+
+
   return (
     <div
-      className={`${
-        isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
-      } p-9 min-h-screen`}
+      className={`${isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
+        } p-9 min-h-screen`}
     >
       {/* <div className="flex justify-between">
         <div className="font-bold text-3xl">
@@ -174,17 +218,17 @@ const CallLog = () => {
               isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
             } ml-3 mt-2 mb-3 border rounded-lg flex`}
           >
-            <img src="./images/Vector (5).webp" alt="" className="w-5 h-5 mt-3 ml-3" />
+            <img src="./Vector (5).webp" alt="" className="w-5 h-5 mt-3 ml-3" />
             <input
               type="text"
               placeholder="Search..."
               className="mr-16 ml-4 outline-none bg-transparent"
             />
           </div>
-          <img src="./images/Rectangle.webp" alt="" className="w-10 h-10 mt-2 ml-8" />
+          <img src="./Rectangle.webp" alt="" className="w-10 h-10 mt-2 ml-8" />
         </div>
       </div> */}
-         <div className="flex flex-col md:flex-row justify-between">
+      <div className="flex flex-col md:flex-row justify-between">
         <div className="font-bold text-2xl md:text-3xl">
           Dashboard Overview
           <p className="text-lg md:text-xl font-semibold text-gray-400">
@@ -192,7 +236,7 @@ const CallLog = () => {
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-4">
+        <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-10">
           <button
             className="flex items-center bg-gray-100 rounded-md p-2 text-lg font-semibold text-gray-600"
             onClick={toggleNightMode}
@@ -209,26 +253,22 @@ const CallLog = () => {
             )}
           </button>
 
+          {/* Profile Icon */}
           <div
-            className={`${
-              isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
-            } border rounded-lg flex items-center w-full md:w-auto`}
-          >
-            <img src="./images/Frame.png" alt="" className="w-5 h-5 ml-3" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="ml-4 p-2 mr-16 outline-none bg-transparent w-full md:w-48"
-            />
+            ref={profileToggleRef}
+            className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white text-3xl font-bold cursor-pointer" onClick={() => setShowProfile(!showProfile)}>
+            {profileData?.username?.charAt(0)}
           </div>
-          <img src="./images/img.png" alt="" className="w-10 h-10" />
         </div>
       </div>
 
+      {showProfile && (
+        <div ref={ProfileRef}><ProfileSettings handleCancel={() => setShowProfile(false)} /></div>
+      )}
+
       <div
-        className={`${
-          isNightMode ? "bg-black text-white" : "bg-white text-gray-700"
-        } flex justify-between rounded-lg shadow-sm p-4 text-2xl font-bold mt-10`}
+        className={`${isNightMode ? "bg-black text-white" : "bg-white text-gray-700"
+          } flex justify-between rounded-lg shadow-sm p-4 text-2xl font-bold mt-10`}
       >
         Call Logs
         <button
@@ -243,9 +283,8 @@ const CallLog = () => {
       {showForm && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div
-            className={`${
-              isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
-            } border w-[40%] py-8 shadow-lg rounded-xl p-6 mt-6`}
+            className={`${isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
+              } border w-[35%] py-8 shadow-lg rounded-xl p-6 mt-6`}
           >
             <h2 className="text-2xl flex justify-between font-bold mb-7">
               Call Numbers
@@ -254,7 +293,7 @@ const CallLog = () => {
               </button>
             </h2>
 
-            <form className="flex justify-between gap-5">
+            <form className="">
               <div className="mb-4 w-full">
                 <label className="block font-medium mb-2">Number</label>
                 <input
@@ -263,7 +302,6 @@ const CallLog = () => {
                   placeholder="Enter a number"
                   inputMode="numeric"
                   value={phoneNumber}
-                  required
                   onChange={(e) => {
                     if (e.target.value.length <= 10) {
                       setPhoneNumber(e.target.value);
@@ -272,29 +310,30 @@ const CallLog = () => {
                   className="w-full border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 />
               </div>
+
+
+              <div className="flex gap-5 justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="bg-gray-200 text-black px-5 py-3 rounded-lg hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className={`bg-customPink text-white px-20 py-3 rounded-lg ${loading
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : " hover:bg-customDarkPink"
+                    }`}
+                  onClick={handleCall}
+                  disabled={loading}
+                >
+                  {loading ? "Calling..." : "Make Call"}
+                </button>
+              </div>
             </form>
-
-            <div className="flex gap-4 justify-end">
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="bg-gray-200 text-black px-5 py-2 rounded-lg hover:bg-gray-300"
-              >
-                Cancel
-              </button>
-
-              <button
-                className={`bg-customPink text-white px-20 py-2 rounded-lg ${
-                  loading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : " hover:bg-customDarkPink"
-                }`}
-                onClick={handleCall}
-                disabled={loading}
-              >
-                {loading ? "Calling..." : "Make Call"}
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -308,72 +347,68 @@ const CallLog = () => {
         </div>
       )}
       {load && (
-        // <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
-        //   <Loader />
-        // </div>
-        <div className="w-[82%] fixed inset-y-0 right-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
-        <Loader />
-      </div>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+          <Loader />
+        </div>
       )}
 
       <div className="flex justify-between mt-10">
         <div className="w-[30%]">
           <div
-            className={`${
-              isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
-            } mt-3 p-2 mb-3 border rounded-lg flex`}
+            className={`${isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
+              } mt-3 p-2 mb-3 border rounded-lg flex`}
           >
             <img src="./images/Frame.png" alt="" className="w-5 h-5 mt-1" />
             <input
               type="text"
-              placeholder="Search calls..."
-              className="ml-4 outline-none bg-transparent text-lg"
+              placeholder="Search by ID, Name, Status, or Number..."
+              className="ml-4 outline-none bg-transparent text-lg w-full"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
-        <div
+        {/* <div
           className={`${
             isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
           } flex p-2 gap-5 items-center text-lg font-medium`}
         >
           <button className="flex border p-2 pr-4 rounded-lg">
-            <img src="./images/i (1).png" alt="" className="p-2" />
+            <img src="./svg.webp" alt="" className="p-2" />
             Filter
           </button>
           <button className="flex border p-2 pr-4 rounded-lg">
-            <img src="./images/i (2).png" alt="" className="p-2" />
+            <img src="./svg (1).webp" alt="" className="p-2" />
             Export
           </button>
-        </div>
+        </div> */}
       </div>
 
       <div className="mt-6 rounded-lg w-full border">
         <div
-          className={`${
-            isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
-          } rounded-lg overflow-x-auto`}
+          className={`${isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
+            } rounded-lg overflow-x-auto`}
         >
           <table className="w-full text-left">
             <thead>
               <tr
-                className={`${
-                  isNightMode
+                className={`${isNightMode
                     ? "bg-customDarkGray text-white"
                     : "bg-gray-50 text-gray-700"
-                } border-b`}
+                  } border-b`}
               >
                 <th className="p-4">ID</th>
                 <th className="p-4">Name</th>
                 <th className="p-4">Status</th>
+                <th className="p-4">Number</th>
                 <th className="p-4">Cost</th>
                 <th className="p-4">Duration</th>
                 <th className="p-4">CTA</th>
                 <th className="p-4">Timestamp</th>
               </tr>
             </thead>
-
             <tbody>
-              {dashboard.executions?.map((execution) => {
+              {filteredExecutions.map((execution) => {
                 const cta = getCTA(execution);
                 const costItem = dashboard.extra_charge_breakdown?.find(
                   (item) => item.execution_id === execution.id
@@ -385,12 +420,10 @@ const CallLog = () => {
 
                 return (
                   <tr key={execution.id} className="text-sm border-t">
-                    <td
-                      className="p-4 cursor-pointer hover:underline"
-                      onClick={() => handleShowDetails(execution)}
+                    <td className="p-4 cursor-pointer hover:underline" onClick={() => handleShowDetails(execution)}
                     >
-                      {execution.id.slice(0, 8)}
-                    </td>
+                      {execution.id.slice(0, 8)}</td>
+
                     <td className="p-4">{getName(execution)}</td>
                     <td className="p-4">
                       <span
@@ -401,7 +434,8 @@ const CallLog = () => {
                         {execution.status}
                       </span>
                     </td>
-                    <td className="p-4">{cost}</td>
+                    <td className="p-4">{execution.telephony_data?.to_number}</td>
+                    <td className="p-4">{execution.total_cost.toFixed(2)}</td>
                     <td className="p-4">
                       {formatDuration(execution.conversation_duration)}
                     </td>

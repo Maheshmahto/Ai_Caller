@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNightMode } from "../contexts/NightModeContext";
 import Loader from "../components/Loader";
 import axios from "../helper/axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import ProfileSettings from "./Profile";
 
 const Billing = () => {
   const [activeButton, setActiveButton] = useState("billing");
@@ -10,10 +11,36 @@ const Billing = () => {
   const totalMinutes = 30;
   const progressPercentage = (usedMinutes / totalMinutes) * 100;
   const [showForm, setShowForm] = useState(false);
-  const { isNightMode ,toggleNightMode } = useNightMode();
+  const { isNightMode, toggleNightMode } = useNightMode();
   const [load, setLoad] = useState(true);
   const [plan, setPlans] = useState([]);
   const token = localStorage.getItem("token");
+  const [profileData, setProfileData] = useState({});
+  const [showProfile, setShowProfile] = useState(false);
+  const navigate = useNavigate();
+  const [amount, setAmount] = useState("");
+
+  const ProfileRef = (null);
+  const profileToggleRef = (null);
+
+  /** ✅ Function to get user profile */
+  const getMyProfile = async () => {
+    try {
+      const response = await axios.get("/api/get_my_profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      // console.log(response.data.data);
+      setProfileData(response.data.data);
+    } catch (e) {
+      Swal.fire({
+        title: e.response?.data?.message || "Error fetching profile",
+        icon: "error",
+      });
+    }
+  };
 
   const subPlans = async () => {
     try {
@@ -46,12 +73,22 @@ const Billing = () => {
   useEffect(() => {
     subPlans();
     getUserBalance();
+    getMyProfile();
   }, []);
+
+  const handleClick = () => {
+    if (amount > 0) {
+      localStorage.setItem("rechargePrice", amount);
+      navigate("/recharge", { state: { price: amount} });
+    } else {
+      alert("Amount must be greater than 0 to proceed.");
+    }
+  };
+
   return (
     <div
-      className={`${
-        isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
-      } p-9 min-h-screen`}
+      className={`${isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
+        } p-9 min-h-screen`}
     >
       <div className="flex justify-between  ">
         <div className=" font-bold text-3xl">
@@ -66,18 +103,18 @@ const Billing = () => {
               isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
             } ml-3 mt-2 mb-3 border rounded-lg flex`}
           >
-            <img src="./images/Vector (5).webp" alt="" className="w-5 h-5 mt-3 ml-3" />
+            <img src="./Vector (5).webp" alt="" className="w-5 h-5 mt-3 ml-3" />
             <input
               type="text"
               placeholder="Search..."
               className="mr-16 ml-4 outline-none bg-transparent"
             />
           </div>
-          < src="./Rectangle.webp" alt="" className="w-10 h-10 mt-2 ml-8 " />
+          <img src="./Rectangle.webp" alt="" className="w-10 h-10 mt-2 ml-8 " />
         </div> */}
-         <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-4">
+        <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-7">
           <button
-            className="flex items-center bg-gray-100 rounded-md p-2 text-lg font-semibold text-gray-600"
+            className="flex items-center bg-gray-100 rounded-md p-2 text-lg font-semibold text-gray-600 "
             onClick={toggleNightMode}
           >
             {isNightMode ? (
@@ -92,41 +129,38 @@ const Billing = () => {
             )}
           </button>
 
+          {/* Profile Icon */}
           <div
-            className={`${
-              isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
-            } border rounded-lg flex items-center w-full md:w-auto`}
-          >
-            <img src="./images/Frame.png" alt="" className="w-5 h-5 ml-3" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="ml-4 p-2 mr-16 outline-none bg-transparent w-full md:w-48"
-            />
+            ref={profileToggleRef}
+            className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white text-3xl font-bold cursor-pointer " onClick={() => setShowProfile(!showProfile)}>
+            {profileData?.username?.charAt(0)}
           </div>
-          <img src="./images/img.png" alt="" className="w-10 h-10" />
+          <div
+            className={`${isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
+              } border rounded-lg flex items-center w-full md:w-auto`}
+          >
+          </div>
         </div>
       </div>
-
+      {showProfile && (
+        <div ref={ProfileRef}><ProfileSettings handleCancel={() => setShowProfile(false)} /></div>
+      )}
       <div
-        className={`${
-          isNightMode ? "bg-black text-white" : "bg-white text-gray-700"
-        } flex shadow rounded-lg mt-10 p-4  gap-5`}
+        className={`${isNightMode ? "bg-black text-white" : "bg-white text-gray-700"
+          } flex shadow rounded-lg mt-10 p-4  gap-5`}
       >
-        
+
         <button
-          className={`p-3 ml-5 rounded-lg text-lg ${
-            activeButton === "billing" ? "bg-customPink text-white" : ""
-          }`}
+          className={`p-3 ml-5 rounded-lg text-lg ${activeButton === "billing" ? "bg-customPink text-white" : ""
+            }`}
           onClick={() => setActiveButton("billing")}
         >
           Billing Summary
         </button>
 
         <button
-          className={`p-3 rounded-lg text-lg ${
-            activeButton === "voice" ? "bg-customPink text-white" : ""
-          }`}
+          className={`p-3 rounded-lg text-lg ${activeButton === "voice" ? "bg-customPink text-white" : ""
+            }`}
           onClick={() => setActiveButton("voice")}
         >
           Voice Usage Revenue
@@ -137,11 +171,10 @@ const Billing = () => {
         <>
           <div className="mt-6 gap-6 flex justify-between relative">
             <div
-              className={`${
-                isNightMode
+              className={`${isNightMode
                   ? "bg-customDarkGray text-white"
                   : "bg-white text-gray-700"
-              } w-full shadow rounded-lg h-40 p-5`}
+                } w-full shadow rounded-lg h-40 p-5`}
             >
               <div className="text-lg ">Your Agency Balance</div>
               <div className="flex justify-between">
@@ -159,11 +192,10 @@ const Billing = () => {
                 {showForm && (
                   <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
                     <div
-                      className={`${
-                        isNightMode
+                      className={`${isNightMode
                           ? "bg-customDarkGray text-white"
                           : "bg-gray-50 text-gray-700"
-                      } border w-[30%] py-8 shadow-lg rounded-xl p-6 mt-6`}
+                        } border w-[30%] py-8 shadow-lg rounded-xl p-6 mt-6`}
                     >
                       <h2 className="text-2xl flex justify-between font-bold mb-7">
                         Your Agency Balance
@@ -184,11 +216,13 @@ const Billing = () => {
                           </label>
                           <input
                             type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
                             placeholder="Amount"
                             className="w-full border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                           />
                         </div>
-                      </form>
+                      
 
                       <div className="flex gap-4 justify-end">
                         <button
@@ -201,13 +235,17 @@ const Billing = () => {
                         >
                           Cancel
                         </button>
-                        <button
-                          type="submit"
-                          className="bg-customPink text-white px-5 py-2 rounded-lg hover:bg-customDarkPink transition"
-                        >
-                          Add to my Balance
-                        </button>
+
+       
+                          <button
+                            type="submit"
+                            className="bg-customPink text-white px-5 py-2 rounded-lg hover:bg-customDarkPink transition"
+                            onClick={handleClick}
+                          >
+                            Add to my Balance
+                          </button>
                       </div>
+                      </form>
                     </div>
                   </div>
                 )}
@@ -215,11 +253,10 @@ const Billing = () => {
             </div>
 
             <div
-              className={`${
-                isNightMode
+              className={`${isNightMode
                   ? "bg-customDarkGray text-white"
                   : "bg-white text-gray-700"
-              } w-full shadow rounded-lg text-lg  p-5`}
+                } w-full shadow rounded-lg text-lg  p-5`}
             >
               Monthly Plan Name
               <p className="text-2xl font-bold mt-2">Starter</p>
@@ -228,11 +265,10 @@ const Billing = () => {
               </p>
             </div>
             <div
-              className={`${
-                isNightMode
+              className={`${isNightMode
                   ? "bg-customDarkGray text-white"
                   : "bg-white text-gray-700"
-              } rounded-lg w-full shadow text-lg p-5`}
+                } rounded-lg w-full shadow text-lg p-5`}
             >
               Plan Expiry Date
               <p className="text-2xl font-bold  mt-2">March 6, 2025</p>
@@ -240,11 +276,10 @@ const Billing = () => {
           </div>
 
           <div
-            className={`${
-              isNightMode
+            className={`${isNightMode
                 ? "bg-customDarkGray text-white"
                 : "bg-white text-gray-700"
-            } shadow rounded-lg p-5 mt-6`}
+              } shadow rounded-lg p-5 mt-6`}
           >
             <p className=" font-medium mb-4">Minute Usage</p>
             <div className="w-full h-3 bg-gray-200 rounded-full">
@@ -259,18 +294,16 @@ const Billing = () => {
           </div>
 
           <div
-            className={`${
-              isNightMode
+            className={`${isNightMode
                 ? "bg-customDarkGray text-white"
                 : "bg-white text-gray-700"
-            } rounded-xl shadow gap-6 p-4 mt-8`}
+              } rounded-xl shadow gap-6 p-4 mt-8`}
           >
             <div
-              className={`${
-                isNightMode
+              className={`${isNightMode
                   ? "bg-customDarkGray text-white"
                   : "bg-gray-50 text-gray-700"
-              } flex p-4 rounded-2xl`}
+                } flex p-4 rounded-2xl`}
             >
               <div className="w-full space-y-2">
                 <h1 className="text-2xl font-bold">Development Cost</h1>
@@ -297,9 +330,8 @@ const Billing = () => {
               {plan.map((plan, index) => (
                 <div
                   key={index}
-                  className={`w-80 p-6 rounded-xl shadow-xl bg-white text-center ${
-                    plan.is_recommended ? "border-blue-500 border-2" : ""
-                  }`}
+                  className={`w-80 p-6 rounded-xl shadow-xl bg-white text-center ${plan.is_recommended ? "border-blue-500 border-2" : ""
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-gray-800">
@@ -343,13 +375,13 @@ const Billing = () => {
                     }}
                     onClick={() =>
                       localStorage.setItem("rechargePrice", plan.price)
-                    } 
+                    }
                   >
                     <button className="mt-6 w-full bg-customPink text-white font-medium py-2 rounded-lg hover:bg-customDarkPink">
                       {plan.is_recommended ? "Get Recommended" : "Get Started"}
                     </button>
                   </Link>
-                 
+
                 </div>
               ))}
             </div>
@@ -363,12 +395,12 @@ const Billing = () => {
                 <div className="flex justify-between">
                   <ul className="text-lg  mt-4">
                     <li className="flex items-center gap-2">
-                    
+
                       <img src="./images/Frame (2).png" alt="" />
                       Unlimited Sub Accounts
                     </li>
                     <li className="flex items-center gap-2">
-                  
+
                       <img src="./images/Frame (2).png" alt="" />
                       Unlimited Assistants
                     </li>
@@ -401,21 +433,19 @@ const Billing = () => {
             </div>
             <div className=" flex gap-6 py-2">
               <button
-                className={`${
-                  isNightMode
+                className={`${isNightMode
                     ? "bg-black text-white"
                     : "bg-gray-100 text-gray-700"
-                } flex border justify-center items-center px-4 gap-2  text-lg  rounded-lg`}
+                  } flex border justify-center items-center px-4 gap-2  text-lg  rounded-lg`}
               >
                 <img src="./images/i (1).png" alt="" className="" />
                 Filter
               </button>
               <button
-                className={`${
-                  isNightMode
+                className={`${isNightMode
                     ? "bg-black text-white"
                     : "bg-gray-100 text-gray-700"
-                } flex border justify-center items-center px-4 gap-2  text-lg  rounded-lg`}
+                  } flex border justify-center items-center px-4 gap-2  text-lg  rounded-lg`}
               >
                 <img src="./images/i (3).png" alt="" className="" />
                 Last 30 days
@@ -424,11 +454,10 @@ const Billing = () => {
           </div>
 
           <div
-            className={`${
-              isNightMode
+            className={`${isNightMode
                 ? "bg-customDarkGray text-white"
                 : "bg-gray-100 text-gray-700"
-            } border-2 border-dotted flex items-center justify-center rounded-lg`}
+              } border-2 border-dotted flex items-center justify-center rounded-lg`}
           >
             <div className="text-center flex flex-col justify-center items-center my-20">
               <img src="./images/Frame (3).png" alt="" className="  " />

@@ -94,7 +94,7 @@ const Sidebar = () => {
       </div>
       <div className="mt-30 text-2xl ml-6 p-2">
         <button
-          className={`flex items-center gap-3 px-4 py-3 w-full rounded-lg transition-all duration-300
+          className={`flex items-center gap-3 px-4 py-3 w-full text-red-600 rounded-lg transition-all duration-300
                         ${
                           active === "Logout"
                             ? "bg-blue-100 text-pink-500"
