@@ -1,4 +1,4 @@
-import {  useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,14 +17,15 @@ import Signup from "./components/Signup";
 import { NightModeProvider } from "./contexts/NightModeContext";
 import LoginPage from "./hooks/LoginPage";
 import PrivateRoute from "./hooks/PrivateRoute";
-function Content({showSidebar}) {
-  const { user } = useLogin();
 
+
+function Content({ showSidebar }) {
+  const { user } = useLogin();
   return (
     <div className="flex">
       {showSidebar && <Sidebar />}
+
       <div className="w-full">
-       
         <Routes>
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<LoginPage />} />

@@ -4,6 +4,7 @@ import { useNightMode } from "../contexts/NightModeContext";
 import { useLogin } from "../contexts/AuthContext";
 import { useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
+import { FiMenu, FiX } from "react-icons/fi";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -12,10 +13,9 @@ const Sidebar = () => {
   const { isNightMode, toggleNightMode } = useNightMode();
 
   const { logout } = useLogin(); // Get logout function here
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLogout = async () => {
-  
-
     await  logout(); // Call the logout function
   };
   const menuItems = [
@@ -51,15 +51,26 @@ const Sidebar = () => {
   }, [location.pathname]);
 
   return (
+    <div className=" relative sm:pr-16 ">
+    {/* Toggle Button */}
+    <button
+      className="absolute top-4 left-1 z-50 text-2xl p-2 rounded md:hidden"
+      onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+    >
+      {isSidebarOpen ? <FiX /> : <FiMenu />}
+    </button>
+
     <div
-      className={`${
+      className={`fixed top-0 left-0 h-screen w-full shadow-xl  transition-transform duration-300 z-40  ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:relative md:translate-x-0 md:w-[128%] ${
         isNightMode ? "bg-gray-950 text-white" : "bg-white text-gray-700"
-      } w-[20%] shadow-xl sticky top-0 left-0 h-screen blur-0`}
+      } `}
     >
       {/* Logo Section */}
-      <div className="border-b-2 p-5">
-        <div className="flex -ml-8 p-4 justify-center items-center">
-          <img src="./images/MAITRIAILOGO4.png" alt="logo" />
+      <div className="border-b-2 p-5 ">
+        <div className="flex p-4 justify-center items-center">
+          <img src="./images/MAITRIAILOGO4.png" alt="logo" className=""/>
         </div>
       </div>
 
@@ -73,8 +84,13 @@ const Sidebar = () => {
           <Link
             to={item.path}
             key={item.name}
-            onClick={() => setActive(item.path)}
-            className={`flex items-center mb-7 gap-3 px-4 py-3 w-full rounded-lg transition-all duration-300
+            onClick={() => {
+              setActive(item.path);
+              if (window.innerWidth < 768) {
+                setIsSidebarOpen(false);
+              }
+            }}
+            className={`flex items-center mb-7 gap-3 px-4 py-3 w-[100%] rounded-lg transition-all duration-300
                             ${
                               active === item.path
                                 ? "bg-blue-100 text-pink-500"
@@ -106,6 +122,7 @@ const Sidebar = () => {
           Logout
         </button>
       </div>
+    </div>
     </div>
   );
 };

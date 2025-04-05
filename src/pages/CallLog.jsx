@@ -198,67 +198,59 @@ const CallLog = () => {
     );
   }) : [];
 
+  const handleCancel = () => {
+    setShowProfile(!showProfile); // Toggle profile visibility
+  };
 
 
   return (
     <div
       className={`${isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
-        } p-9 min-h-screen`}
+        } p-4 md:p-6 lg:p-9 h-screen`}
     >
-      {/* <div className="flex justify-between">
-        <div className="font-bold text-3xl">
-          CallLogs Overview
-          <p className="text-xl font-semibold text-gray-400">
-            Monitor your AI calling performance
-          </p>
-        </div>
-        <div className="flex">
-          <div
-            className={`${
-              isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
-            } ml-3 mt-2 mb-3 border rounded-lg flex`}
-          >
-            <img src="./Vector (5).webp" alt="" className="w-5 h-5 mt-3 ml-3" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="mr-16 ml-4 outline-none bg-transparent"
-            />
-          </div>
-          <img src="./Rectangle.webp" alt="" className="w-10 h-10 mt-2 ml-8" />
-        </div>
-      </div> */}
       <div className="flex flex-col md:flex-row justify-between">
-        <div className="font-bold text-2xl md:text-3xl">
-          Dashboard Overview
-          <p className="text-lg md:text-xl font-semibold text-gray-400">
-            Monitor your AI calling performance
-          </p>
+        {/* Show logo on mobile and text on larger screens */}
+        <div className="flex items-center">
+          <img
+            src="./images/MAITRIAILOGO4.png" 
+            alt="Company Logo"
+            className="w-40 sm:hidden -mt-1 ml-10"
+          />
+          {/* Dashboard text - hidden on mobile */}
+          <div className="hidden sm:block font-bold text-2xl md:text-3xl">
+            Dashboard Overview
+            <p className="text-lg md:text-xl font-semibold text-gray-400">
+              Monitor your AI calling performance
+            </p>
+          </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-10">
+        <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-4">
           <button
-            className="flex items-center bg-gray-100 rounded-md p-2 text-lg font-semibold text-gray-600"
+            className="flex items-center bg-gray-100 rounded-full sm:rounded-md p-2 text-lg font-semibold text-gray-600 absolute sm:static top-4 right-14"
             onClick={toggleNightMode}
           >
             {isNightMode ? (
               <>
-                Light mode <img src="./images/Light mode.png" alt="" className="ml-2" />
+                <h2 className="hidden sm:inline"> Light mode{" "}</h2>
+                <img src="./images/Light mode.png" alt="" className="" />
               </>
             ) : (
               <>
-                Night mode
-                <img src="./images/material-symbols-light_dark-mode-rounded.png" alt="" className="ml-2" />
+                <h2 className="hidden sm:inline">Night mode</h2>
+                <img src="./images/material-symbols-light_dark-mode-rounded.png" alt="" className="" />
               </>
             )}
           </button>
 
-          {/* Profile Icon */}
           <div
             ref={profileToggleRef}
-            className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white text-3xl font-bold cursor-pointer" onClick={() => setShowProfile(!showProfile)}>
-            {profileData?.username?.charAt(0)}
+            className="w-9 h-9 sm:w-12 sm:h-12 mr-6 bg-pink-500 rounded-full flex items-center justify-center text-white text-xl sm:text-3xl font-bold cursor-pointer absolute sm:static top-0 -right-3 "
+            onClick={handleCancel}
+          >
+            {profileData?.username?.slice(0, 1)}
           </div>
+          {/* <img src="./images/Rectangle.webp" alt="" className="w-10 h-10 cursor-pointer" onClick={handleCancel} /> */}
         </div>
       </div>
 
@@ -268,7 +260,7 @@ const CallLog = () => {
 
       <div
         className={`${isNightMode ? "bg-black text-white" : "bg-white text-gray-700"
-          } flex justify-between rounded-lg shadow-sm p-4 text-2xl font-bold mt-10`}
+          } flex justify-between items-center rounded-lg shadow-sm p-4 text-2xl font-bold mt-10`}
       >
         Call Logs
         <button
@@ -281,10 +273,10 @@ const CallLog = () => {
       </div>
 
       {showForm && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50 z-[9999]">
           <div
             className={`${isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
-              } border w-[35%] py-8 shadow-lg rounded-xl p-6 mt-6`}
+              } border w-[100] sm:w-[35%] py-8 shadow-lg rounded-xl p-6 mt-6`}
           >
             <h2 className="text-2xl flex justify-between font-bold mb-7">
               Call Numbers
@@ -324,8 +316,8 @@ const CallLog = () => {
                 <button
                   type="submit"
                   className={`bg-customPink text-white px-20 py-3 rounded-lg ${loading
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : " hover:bg-customDarkPink"
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : " hover:bg-customDarkPink"
                     }`}
                   onClick={handleCall}
                   disabled={loading}
@@ -353,10 +345,10 @@ const CallLog = () => {
       )}
 
       <div className="flex justify-between mt-10">
-        <div className="w-[30%]">
+        <div className="w-full sm:w-[30%]">
           <div
             className={`${isNightMode ? "bg-gray-600 text-white" : "bg-white text-gray-700"
-              } mt-3 p-2 mb-3 border rounded-lg flex`}
+              } mt-3 p-2 mb-3 border rounded-lg flex `}
           >
             <img src="./images/Frame.png" alt="" className="w-5 h-5 mt-1" />
             <input
@@ -393,8 +385,8 @@ const CallLog = () => {
             <thead>
               <tr
                 className={`${isNightMode
-                    ? "bg-customDarkGray text-white"
-                    : "bg-gray-50 text-gray-700"
+                  ? "bg-customDarkGray text-white"
+                  : "bg-gray-50 text-gray-700"
                   } border-b`}
               >
                 <th className="p-4">ID</th>

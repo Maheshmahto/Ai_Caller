@@ -76,8 +76,8 @@ const LoginPage = () => {
 
   return (
     <div className="flex h-screen p-16">
-      <div className="w-[60%] flex justify-center items-center">
-        <img className="h-[80%]" src="./images/SignIn.png" alt="Login" />
+      <div className="sm:w-[60%] w-[50%] flex justify-center items-center">
+        <img className="sm:h-[80%] h-[30%]" src="./images/SignIn.png" alt="Login" />
       </div>
       <div className="shadow-lg flex-1 rounded-xl px-10">
         <div className="">
@@ -96,7 +96,7 @@ const LoginPage = () => {
             value={loginData.email}
             type="email"
             placeholder="Enter your email"
-            className="w-full border px-5 py-2 rounded-md"
+            className="sm:w-full border px-5 py-2 rounded-md"
             onChange={(e) => handleChange("email", e.target.value)}
             required
           />

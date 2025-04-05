@@ -30,32 +30,32 @@ const Campaigns = () => {
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, delete it!",
     });
-   if(result.isConfirmed){
-    try {
-      const response = await axios.delete(`/api/batches/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response) {
-        Swal.fire({
-          icon: "success",
-          title: "data is deleted",
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.delete(`/api/batches/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         });
-        window.location.reload();
 
-        
+        if (response) {
+          Swal.fire({
+            icon: "success",
+            title: "data is deleted",
+          });
+          window.location.reload();
+
+
+        }
+      } catch (e) {
+        Swal.fire({
+          icon: "error",
+          title: `${e}`,
+        });
       }
-    } catch (e) {
-      Swal.fire({
-        icon: "error",
-        title: `${e}`,
-      });
     }
-   }
-  
+
   };
   const handleSchedule = () => {
     if (!batchId) {
@@ -131,14 +131,14 @@ const Campaigns = () => {
     if (file && file.type === "text/csv") {
       setFileData(file);
     } else {
-    
-    Swal.fire({
-      icon:'warning',
-      title: "Please Upload .CSV file",
-    });
-      e.target.value = ""; 
+
+      Swal.fire({
+        icon: 'warning',
+        title: "Please Upload .CSV file",
+      });
+      e.target.value = "";
     }
-  
+
   };
 
   const BatchCreate = async () => {
@@ -172,23 +172,30 @@ const Campaigns = () => {
 
   return (
     <div
-      className={`${
-        isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
-      } p-9 min-h-screen`}
+      className={`${isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
+        } p-4 md:p-6 lg:p-9 h-screen`}
     >
-      <div className="flex justify-between">
-        <div className="font-bold text-3xl">
-          Dashboard Overview
-          <p className="text-xl font-semibold text-gray-400">
-            Monitor your AI calling performance
-          </p>
+      <div className="flex flex-col md:flex-row justify-between">
+        {/* Show logo on mobile and text on larger screens */}
+        <div className="flex items-center">
+          <img
+            src="./images/MAITRIAILOGO4.png" 
+            alt="Company Logo"
+            className="w-40 sm:hidden -mt-1 ml-10" 
+          />
+          {/* Dashboard text - hidden on mobile */}
+          <div className="hidden sm:block font-bold text-2xl md:text-3xl">
+            Dashboard Overview
+            <p className="text-lg md:text-xl font-semibold text-gray-400">
+              Monitor your AI calling performance
+            </p>
+          </div>
         </div>
       </div>
 
       <div
-        className={`${
-          isNightMode ? "bg-black text-white" : "bg-white text-gray-700"
-        } flex justify-between shadow p-4 mt-10 rounded-lg`}
+        className={`${isNightMode ? "bg-black text-white" : "bg-white text-gray-700"
+          } flex justify-between shadow p-4 mt-10 rounded-lg `}
       >
         <h1 className="text-3xl flex items-center font-bold">Campaigns</h1>
         <button
@@ -200,13 +207,12 @@ const Campaigns = () => {
       </div>
 
       {showForm && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50 z-[9999]">
           <div
-            className={`${
-              isNightMode
+            className={`${isNightMode
                 ? "bg-customDarkGray text-white"
                 : "bg-gray-50 text-gray-700"
-            } border w-[30%] py-8 shadow-lg rounded-xl p-6 mt-6`}
+              } border w-[90%] sm:w-[30%] py-8 shadow-lg rounded-xl p-6 mt-6`}
           >
             <h2 className="text-2xl flex justify-between font-bold mb-7">
               Create New Campaign
@@ -246,9 +252,9 @@ const Campaigns = () => {
         // <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
         //   <Loader />
         // </div>
-        <div className="w-[82%] fixed inset-y-0 right-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
-        <Loader />
-      </div>
+        <div className="fixed inset-0 right-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+          <Loader />
+        </div>
       )}
       {showCalendar && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-70 z-[1000]">
@@ -279,15 +285,14 @@ const Campaigns = () => {
         </div>
       )}
 
-      <div className="shadow-md mt-9">
-        <table className="w-full rounded-lg border">
+      <div className="shadow-md mt-9 overflow-x-auto">
+        <table className="min-w-full rounded-lg border">
           <thead>
             <tr
-              className={`${
-                isNightMode
+              className={`${isNightMode
                   ? "bg-gray-800 text-white"
                   : "bg-gray-100 text-gray-700"
-              } text-left border-b`}
+                } text-left border-b`}
             >
               <th className="p-3">Campaign Name</th>
               <th className="p-3">Caller</th>
@@ -300,11 +305,10 @@ const Campaigns = () => {
             {BatchData.map((batch) => (
               <tr
                 key={batch.batch_id}
-                className={`${
-                  isNightMode
+                className={`${isNightMode
                     ? "bg-gray-600 text-white"
                     : "bg-white text-gray-700"
-                } h-14`}
+                  } h-14`}
               >
                 <td className="p-3">{batch.file_name}</td>
                 <td className="p-3">{batch.from_phone_number}</td>
