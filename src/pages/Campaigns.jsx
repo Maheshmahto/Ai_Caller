@@ -173,7 +173,7 @@ const Campaigns = () => {
   return (
     <div
       className={`${isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
-        } p-4 md:p-6 lg:p-9 h-screen`}
+        } p-4 md:p-6 lg:p-9 h-screen md:ml-64`}
     >
       <div className="flex flex-col md:flex-row justify-between">
         {/* Show logo on mobile and text on larger screens */}

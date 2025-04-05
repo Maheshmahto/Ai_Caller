@@ -190,6 +190,17 @@ const CallDetails = ({ handleShowDetails, execution }) => {
         />
         Your browser does not support the audio element.
       </audio>
+      <h3 className="text-lg font-semibold mb-2">
+      Summary
+      </h3>
+      <div className="grid  gap-4 mb-4">
+        <div className={`${
+      isNightMode ? "bg-gray-200 text-gray-700" : "bg-gray-200 text-gray-700"
+    } p-2 rounded flex items-center gap-2`}>
+          {execution?.summary}
+        </div>
+      
+      </div>
 
       <h3 className="text-lg font-semibold mb-2">Call History</h3>
       <div className={`${
@@ -217,6 +228,7 @@ const CallDetails = ({ handleShowDetails, execution }) => {
           {formatDuration(execution?.conversation_duration)}
         </span>
       </div>
+      
 
       <div className="flex justify-end gap-4">
         <button

@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { useLogin } from "../contexts/AuthContext";
 import UpdatePassword from "./UpdatePassword";
+import { MdLogout } from "react-icons/md";
 
 const ProfileSettings = ({ handleCancel }) => {
   const token = localStorage.getItem("token");
@@ -110,9 +111,10 @@ const ProfileSettings = ({ handleCancel }) => {
             <Link>
               <button
                 onClick={handleLogout}
-                className="w-full bg-red-500 m-2 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200"
+                className="w-full bg-red-500 m-2 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200 "
               >
-                Log out
+            {/* <MdLogout /> */}
+            Logout
               </button>
             </Link>
           </div>

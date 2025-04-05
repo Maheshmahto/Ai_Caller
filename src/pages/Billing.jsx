@@ -92,15 +92,15 @@ const Billing = () => {
   return (
     <div
       className={`${isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
-        } p-4 md:p-6 lg:p-9 `}
+        } p-4 md:p-6 lg:p-9 md:ml-64 `}
     >
       <div className="flex flex-col md:flex-row justify-between">
         {/* Show logo on mobile and text on larger screens */}
         <div className="flex items-center">
           <img
-            src="./images/MAITRIAILOGO4.png" 
+            src="./images/MAITRIAILOGO4.png"
             alt="Company Logo"
-            className="w-40 sm:hidden -mt-1 ml-10" 
+            className="w-40 sm:hidden -mt-1 ml-10"
           />
           {/* Dashboard text - hidden on mobile */}
           <div className="hidden sm:block font-bold text-2xl md:text-3xl">
@@ -113,7 +113,7 @@ const Billing = () => {
 
         <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-4">
           <button
-            className="flex items-center bg-gray-100 rounded-full sm:rounded-md p-2 text-lg font-semibold text-gray-600 absolute sm:static top-4 right-14"
+            className="flex items-center bg-gray-100 rounded-full sm:rounded-md p-2 text-lg font-semibold text-gray-600 absolute sm:static top-4 right-14 gap-2"
             onClick={toggleNightMode}
           >
             {isNightMode ? (
@@ -134,7 +134,9 @@ const Billing = () => {
             className="w-9 h-9 sm:w-12 sm:h-12 mr-6 bg-pink-500 rounded-full flex items-center justify-center text-white text-xl sm:text-3xl font-bold cursor-pointer absolute sm:static top-0 -right-3 "
             onClick={handleCancel}
           >
-            {profileData?.username?.slice(0, 1)}
+            {/* {profileData?.username?.slice(0, 1)} */}
+            <svg xmlns="http://www.w3.org/2000/svg" width={512} height={512} viewBox="0 0 512 512"><path fill="white" fillRule="evenodd" d="M256 42.667A213.333 213.333 0 0 1 469.334 256c0 117.821-95.513 213.334-213.334 213.334c-117.82 0-213.333-95.513-213.333-213.334C42.667 138.18 138.18 42.667 256 42.667m21.334 234.667h-42.667c-52.815 0-98.158 31.987-117.715 77.648c30.944 43.391 81.692 71.685 139.048 71.685s108.104-28.294 139.049-71.688c-19.557-45.658-64.9-77.645-117.715-77.645M256 106.667c-35.346 0-64 28.654-64 64s28.654 64 64 64s64-28.654 64-64s-28.653-64-64-64"></path></svg>
+
           </div>
           {/* <img src="./images/Rectangle.webp" alt="" className="w-10 h-10 cursor-pointer" onClick={handleCancel} /> */}
         </div>
@@ -323,7 +325,7 @@ const Billing = () => {
               </h2>
             </div>
 
-            <div className="sm:flex justify-around w-full sm:p-6">
+            <div className="sm:flex justify-around w-full sm:p-6 p-6">
               {plan.map((plan, index) => (
                 <div
                   key={index}
@@ -383,38 +385,36 @@ const Billing = () => {
               ))}
             </div>
 
-            <div className="rounded-lg mt-9 p-8 ">
-              <div className="">
-                <h1 className="text-3xl font-bold">Enterprise Plan</h1>
-                <h2 className="text-xl mt-2 ">
-                  Custom solutions for large organizations
-                </h2>
-                <div className="flex justify-between">
-                  <ul className="text-lg  mt-4">
-                    <li className="flex items-center gap-2">
-
-                      <img src="./images/Frame (2).png" alt="" />
-                      Unlimited Sub Accounts
-                    </li>
-                    <li className="flex items-center gap-2">
-
-                      <img src="./images/Frame (2).png" alt="" />
-                      Unlimited Assistants
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <img src="./images/Frame (2).png" alt="" />
-                      Unlimited Minutes
-                    </li>
-                  </ul>
-                  <ul className="">
-                    <li className="text-3xl font-bold">Custom Pricing</li>
-                    <li className="text-center border mx-8 py-3 mt-4 rounded-lg">
-                      Contact Sales
-                    </li>
-                  </ul>
+            <div className="flex items-center justify-center">
+              <div className="bg-white rounded-xl shadow-xl p-6 w-80">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-2xl font-bold text-gray-800">Enterprise</h3>
+                  <span className="text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-full">
+                    Custom
+                  </span>
                 </div>
+                <h2 className="text-2xl font-bold mt-3">Contact us</h2>
+                <ul className="mt-4 space-y-3 text-gray-900 text-lg">
+                  <li className="flex items-start gap-2">
+                    <img src="./images/Frame (2).png" alt="check" className="h-5 w-5 mt-1" />
+                    For enterprise's that need volume based discounts and custom terms.
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <img src="./images/Frame (2).png" alt="check" className="h-5 w-5 mt-1" />
+                    Custom Assistants
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <img src="./images/Frame (2).png" alt="check" className="h-5 w-5 mt-1" />
+                    Social media configuration
+                  </li>
+                </ul>
+                <button className="mt-6 w-full bg-customPink text-white font-medium py-2 rounded-lg hover:bg-customDarkPink">
+                  Let’s Talk
+                </button>
               </div>
             </div>
+
+
           </div>
         </>
       )}
