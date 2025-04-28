@@ -74,11 +74,7 @@ const CallLog = () => {
 
   const handleCall = async () => {
     if (!phoneNumber.trim()) {
-      Swal.fire({
-        title: "Error",
-        text: "Please enter a valid phone number.",
-        icon: "error",
-      });
+     
       return;
     }
     setloading(true);
@@ -99,8 +95,10 @@ const CallLog = () => {
         title: "Call Created",
         text: "Call initiated successfully!",
         icon: "success",
+       
       });
       setPhoneNumber("");
+      setShowForm(false);
     } catch (err) {
       Swal.fire({
         title: "Error",
@@ -276,7 +274,7 @@ const CallLog = () => {
       </div>
 
       {showForm && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50 z-[9999]">
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50 z-[50]">
           <div
             className={`${isNightMode ? "bg-black text-white" : "bg-gray-50 text-gray-700"
               } border w-[100] sm:w-[35%] py-8 shadow-lg rounded-xl p-6 mt-6`}
@@ -297,6 +295,7 @@ const CallLog = () => {
                   placeholder="Enter a number"
                   inputMode="numeric"
                   value={phoneNumber}
+                  required
                   onChange={(e) => {
                     if (e.target.value.length <= 10) {
                       setPhoneNumber(e.target.value);
@@ -342,7 +341,7 @@ const CallLog = () => {
         </div>
       )}
       {load && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-30">
           <Loader />
         </div>
       )}

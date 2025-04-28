@@ -24,6 +24,8 @@ function Content({ showSidebar }) {
   return (
     <div className="flex">
       {showSidebar && <Sidebar />}
+      {/* <LanguageSwitcher /> */}
+      {/* <i18n/> */}
 
       <div className="w-full">
         <Routes>
@@ -41,7 +43,8 @@ function Content({ showSidebar }) {
           </Route>
         </Routes>
       </div>
-    </div>
+      </div>
+
   );
 }
 const AppWrapper = () => {
@@ -53,6 +56,8 @@ const AppWrapper = () => {
     setShowSidebar(!noSidebarPages.includes(location.pathname));
   }, [location.pathname]);
 
+
+
   return <Content showSidebar={showSidebar} />;
 };
 function App() {
@@ -60,6 +65,7 @@ function App() {
     <Router basename="/maitri_assistant">
       <NightModeProvider>
         <LoginProvider>
+        {/* <GoogleTranslate/> */}
           <AppWrapper />
         </LoginProvider>
       </NightModeProvider>

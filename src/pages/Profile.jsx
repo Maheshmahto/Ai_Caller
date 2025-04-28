@@ -83,9 +83,9 @@ const ProfileSettings = ({ handleCancel }) => {
 
             {/* Email Section */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Email :-</label>
+              <label className="text-sm font-medium ml-2">Email :-</label>
               <div
-                className={`p-3 rounded-lg ${
+                className={`p-3 ml-2 -mr-2 rounded-lg ${
                   isNightMode
                     ? "bg-gray-800 text-white"
                     : "bg-gray-100 text-gray-800"

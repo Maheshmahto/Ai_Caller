@@ -3,9 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "../helper/axios";
 import Swal from "sweetalert2";
 import { useLogin } from "../contexts/AuthContext";
+import { PiEyeLight, PiEyeSlash } from "react-icons/pi";
+
 
 const LoginPage = () => {
   const { dispatch } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({
     email: "",
     user_password: "",
@@ -97,17 +100,28 @@ const LoginPage = () => {
               required
             />
           </div>
-          <div>
+          <div className="relative">
             <label className="text-gray-600 font-semibold">Password</label>
             <input
               name="password"
               value={loginData.user_password}
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               className="w-full border px-5 py-2 rounded-md mt-1"
               onChange={(e) => handleChange("user_password", e.target.value)}
               required
             />
+            <button 
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute inset-y-0 top-7 right-2 flex items-center"
+            >
+            {showPassword ? (
+                  <PiEyeSlash className="h-5 w-5 text-gray-500" />
+                ) : (
+                  <PiEyeLight  className="h-5 w-5 text-gray-500" />
+                )}
+            </button>
           </div>
           <button
             type="submit"

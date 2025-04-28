@@ -51,6 +51,7 @@ const Billing = () => {
       setPlans(response.data);
     } catch (e) {
       console.log(e);
+      
     }
   };
 
@@ -64,8 +65,8 @@ const Billing = () => {
           "Content-Type": "application/json",
         },
       });
-
       setBalance(response.data.balance);
+      setLoad(false);
     } catch (e) {
       console.log(e);
     }
@@ -81,7 +82,7 @@ const Billing = () => {
       localStorage.setItem("rechargePrice", amount);
       navigate("/recharge", { state: { price: amount } });
     } else {
-      alert("Amount must be greater than 0 to proceed.");
+      return
     }
   };
 
@@ -187,6 +188,15 @@ const Billing = () => {
                 >
                   Add Funds
                 </button>
+                
+                {load && (
+                  // <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+                  //   <Loader />
+                  // </div>
+                  <div className="fixed inset-0 right-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-30">
+                    <Loader />
+                  </div>
+                )}
 
                 {showForm && (
                   <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50 z-[9999]">
@@ -216,6 +226,7 @@ const Billing = () => {
                           <input
                             type="number"
                             value={amount}
+                            required
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="Amount"
                             className="w-full border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"

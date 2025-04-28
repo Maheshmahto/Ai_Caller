@@ -10,7 +10,7 @@ import { MdLogout } from "react-icons/md";
 const Sidebar = () => {
   const location = useLocation();
   const [active, setActive] = useState(location.pathname);
-  // const [active, setActive] = useState("false");
+  // const [active, setActive] = useState("false"z);
   const { isNightMode, toggleNightMode } = useNightMode();
 
   const { logout } = useLogin(); // Get logout function here
